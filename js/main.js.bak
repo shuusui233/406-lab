@@ -1,0 +1,137 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const contactForm = document.getElementById('contactForm');
+    const fullpageContainer = document.getElementById('fullpageContainer');
+    const scrollDots = document.querySelectorAll('.scroll-dot');
+    const sectionItems = document.querySelectorAll('.section-item');
+    
+    let currentSection = 0;
+    let isScrolling = false;
+    const totalSections = sectionItems.length;
+
+    hamburger.addEventListener('click', function() {
+        navMenu.classList.toggle('active');
+    });
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            navMenu.classList.remove('active');
+            const index = parseInt(this.getAttribute('data-index'));
+            goToSection(index);
+        });
+    });
+
+    scrollDots.forEach(dot => {
+        dot.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            goToSection(index);
+        });
+    });
+
+    function goToSection(index) {
+        if (index < 0 || index >= totalSections || isScrolling) return;
+        
+        isScrolling = true;
+        currentSection = index;
+        
+        fullpageContainer.style.transform = `translateY(-${currentSection * 100}vh)`;
+        
+        updateNavState();
+        
+        setTimeout(() => {
+            isScrolling = false;
+        }, 1000);
+    }
+
+    function updateNavState() {
+        navLinks.forEach((link, index) => {
+            link.classList.remove('active');
+            if (index === currentSection) {
+                link.classList.add('active');
+            }
+        });
+
+        scrollDots.forEach((dot, index) => {
+            dot.classList.remove('active');
+            if (index === currentSection) {
+                dot.classList.add('active');
+            }
+        });
+    }
+
+    let wheelTimeout;
+    document.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        
+        clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(() => {
+            if (isScrolling) return;
+            
+            if (e.deltaY > 0) {
+                goToSection(currentSection + 1);
+            } else {
+                goToSection(currentSection - 1);
+            }
+        }, 50);
+    }, { passive: false });
+
+    let touchStartY = 0;
+    let touchEndY = 0;
+
+    document.addEventListener('touchstart', function(e) {
+        touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    document.addEventListener('touchend', function(e) {
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+        if (isScrolling) return;
+        
+        const swipeThreshold = 50;
+        const diff = touchStartY - touchEndY;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                goToSection(currentSection + 1);
+            } else {
+                goToSection(currentSection - 1);
+            }
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (isScrolling) return;
+        
+        if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+            e.preventDefault();
+            goToSection(currentSection + 1);
+        } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+            e.preventDefault();
+            goToSection(currentSection - 1);
+        } else if (e.key === 'Home') {
+            e.preventDefault();
+            goToSection(0);
+        } else if (e.key === 'End') {
+            e.preventDefault();
+            goToSection(totalSections - 1);
+        }
+    });
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            alert('感谢您的留言！\n\n姓名: ' + name + '\n邮箱: ' + email + '\n留言: ' + message);
+            contactForm.reset();
+        });
+    }
+});

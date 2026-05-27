@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>406实训室 - 创新与实践</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif; }
+        
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab, #667eea, #764ba2);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #f59e0b;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --bg-white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .fullpage {
+            height: 100vh;
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+        
+        .section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px 20px;
+            position: relative;
+            background: transparent;
+        }
+        
+        .content-wrapper {
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 40%, rgba(0, 0, 0, 0.4) 70%, rgba(0, 0, 0, 0) 100%);
+            padding: 1rem 20px 3rem 20px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-color);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+        
+        .dots {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px solid white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .dot.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: scale(1.3);
+        }
+        
+        .dot:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            opacity: 0.8;
+        }
+        
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        .hero {
+            color: white;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 36px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-primary:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            background: linear-gradient(135deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .about-content {
+            display: flex;
+            gap: 60px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .about-text {
+            flex: 1;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .about-text p {
+            margin-bottom: 20px;
+        }
+        
+        .about-features {
+            flex: 1;
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .feature-card {
+            flex: 1;
+            min-width: 150px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .feature-card p {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .project-image {
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .project-info {
+            padding: 1.5rem;
+        }
+        
+        .project-info h3 {
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .project-info p {
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 1rem;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .team-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .team-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .member-avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .team-card h3 {
+            margin-bottom: 0.25rem;
+            color: white;
+        }
+        
+        .team-card .role {
+            color: var(--accent-color);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .team-card p {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .recruit-info,
+        .recruit-process {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .recruit-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+        
+        .recruit-info h3,
+        .recruit-process h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+        
+        .recruit-info ul {
+            list-style: none;
+        }
+        
+        .recruit-info li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .recruit-info li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .step {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0 auto 0.5rem;
+        }
+        
+        .step p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+        
+        .recruit-cta {
+            text-align: center;
+        }
+        
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+        
+        .contact-info {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .contact-form {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .contact-item {
+            margin-bottom: 2rem;
+        }
+        
+        .contact-item h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-item p {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: rgba(255,255,255,0.15);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .about-content,
+            .recruit-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .process-steps {
+                flex-direction: column;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .dots {
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <div class="nav-brand">406实训室</div>
+        <div class="nav-links">
+            <a data-index="0" class="active">首页</a>
+            <a data-index="1">关于我们</a>
+            <a data-index="2">项目展示</a>
+            <a data-index="3">团队成员</a>
+            <a data-index="4">招新信息</a>
+            <a data-index="5">联系我们</a>
+        </div>
+    </div>
+    
+    <div class="dots">
+        <div class="dot active" data-index="0"></div>
+        <div class="dot" data-index="1"></div>
+        <div class="dot" data-index="2"></div>
+        <div class="dot" data-index="3"></div>
+        <div class="dot" data-index="4"></div>
+        <div class="dot" data-index="5"></div>
+    </div>
+    
+    <div class="fullpage" id="fullpage">
+        <div class="section hero">
+            <div class="content-wrapper">
+                <h1>欢迎来到406实训室</h1>
+                <p>创新与实践相遇，梦想在此起航</p>
+                <!-- <a class="btn btn-primary" data-index="4">加入我们</a> -->
+            </div>
+        </div>
+        
+        <div class="section about">
+            <div class="content-wrapper">
+                <h2 class="section-title">关于我们</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>406实训室是一个专注于技术创新与实践的团队，我们致力于培养优秀的技术人才，通过项目实践提升团队成员的技术能力和创新思维。</p>
+                        <p>在这里，你可以接触到前沿技术，参与有趣的项目，结识志同道合的伙伴。</p>
+                    </div>
+                    <div class="about-features">
+                        <div class="feature-card">
+                            <div class="feature-icon">💡</div>
+                            <h3>技术创新</h3>
+                            <p>探索前沿技术，不断创新突破</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📁</div>
+                            <h3>项目实践</h3>
+                            <p>通过实际项目提升技术能力</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🤝</div>
+                            <h3>团队协作</h3>
+                            <p>与优秀的伙伴一起成长</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section projects">
+            <div class="content-wrapper">
+                <h2 class="section-title">项目展示</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-image">项目图片</div>
+                        <div class="project-info">
+                            <h3>项目一</h3>
+                            <p>项目描述...</p>
+                            <a class="btn btn-secondary">查看详情</a>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image">项目图片</div>
+                        <div class="project-info">
+                            <h3>项目二</h3>
+                            <p>项目描述...</p>
+                            <a class="btn btn-secondary">查看详情</a>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image">项目图片</div>
+                        <div class="project-info">
+                            <h3>项目三</h3>
+                            <p>项目描述...</p>
+                            <a class="btn btn-secondary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section team">
+            <div class="content-wrapper">
+                <h2 class="section-title">团队成员</h2>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="member-avatar">头像</div>
+                        <h3>成员姓名</h3>
+                        <p class="role">职位</p>
+                        <p>个人简介...</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="member-avatar">头像</div>
+                        <h3>成员姓名</h3>
+                        <p class="role">职位</p>
+                        <p>个人简介...</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="member-avatar">头像</div>
+                        <h3>成员姓名</h3>
+                        <p class="role">职位</p>
+                        <p>个人简介...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section recruit">
+            <div class="content-wrapper">
+                <h2 class="section-title">招新信息</h2>
+                <div class="recruit-content">
+                    <div class="recruit-info">
+                        <h3>我们期待这样的你</h3>
+                        <ul>
+                            <li>对技术充满热情，愿意学习新技术</li>
+                            <li>有良好的团队合作精神</li>
+                            <li>有责任心，能够按时完成任务</li>
+                            <li>有一定的编程基础优先</li>
+                        </ul>
+                    </div>
+                    <div class="recruit-process">
+                        <h3>加入流程</h3>
+                        <div class="process-steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <p>提交申请</p>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <p>面试/笔试</p>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <p>结果通知</p>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <p>正式加入</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="recruit-cta">
+                    <a class="btn btn-primary" data-index="5">立即申请</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section contact">
+            <div class="content-wrapper">
+                <h2 class="section-title">联系我们</h2>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <h3>地址</h3>
+                            <p>XX大学XX校区XX楼406室</p>
+                        </div>
+                        <div class="contact-item">
+                            <h3>邮箱</h3>
+                            <p>contact@406lab.com</p>
+                        </div>
+                        <div class="contact-item">
+                            <h3>QQ群</h3>
+                            <p>123456789</p>
+                        </div>
+                    </div>
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <label for="name">姓名</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">邮箱</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">留言</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">发送消息</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fullpage = document.getElementById('fullpage');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const dots = document.querySelectorAll('.dot');
+        const ctas = document.querySelectorAll('.btn-primary[data-index]');
+        let currentIndex = 0;
+        let isAnimating = false;
+        
+        function goTo(index) {
+            if (index < 0 || index >= 6 || isAnimating) return;
+            isAnimating = true;
+            currentIndex = index;
+            fullpage.style.transform = 'translateY(-' + (currentIndex * 100) + 'vh)';
+            
+            navLinks.forEach((a, i) => {
+                a.classList.remove('active');
+                if (i === currentIndex) a.classList.add('active');
+            });
+            
+            dots.forEach((d, i) => {
+                d.classList.remove('active');
+                if (i === currentIndex) d.classList.add('active');
+            });
+            
+            setTimeout(() => isAnimating = false, 1000);
+        }
+        
+        navLinks.forEach(a => a.addEventListener('click', () => goTo(parseInt(a.dataset.index))));
+        dots.forEach(d => d.addEventListener('click', () => goTo(parseInt(d.dataset.index))));
+        ctas.forEach(btn => btn.addEventListener('click', () => goTo(parseInt(btn.dataset.index))));
+        
+        let wheelTimeout;
+        document.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            clearTimeout(wheelTimeout);
+            wheelTimeout = setTimeout(() => {
+                if (isAnimating) return;
+                goTo(e.deltaY > 0 ? currentIndex + 1 : currentIndex - 1);
+            }, 50);
+        }, { passive: false });
+        
+        document.addEventListener('keydown', (e) => {
+            if (isAnimating) return;
+            if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+                e.preventDefault();
+                goTo(currentIndex + 1);
+            }
+            if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                e.preventDefault();
+                goTo(currentIndex - 1);
+            }
+        });
+        
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const message = document.getElementById('message').value;
+
+                alert('感谢您的留言！\n\n姓名: ' + name + '\n邮箱: ' + email + '\n留言: ' + message);
+                contactForm.reset();
+            });
+        }
+    </script>
+</body>
+</html>

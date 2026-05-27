@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简单测试</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { overflow: hidden; font-family: Arial, sans-serif; }
+        
+        .fullpage {
+            height: 100vh;
+            transition: transform 0.8s ease;
+        }
+        
+        .section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .section:nth-child(1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .section:nth-child(2) { background: #f0f0f0; }
+        .section:nth-child(3) { background: white; }
+        .section:nth-child(4) { background: #f0f0f0; }
+        .section:nth-child(5) { background: white; }
+        .section:nth-child(6) { background: #f0f0f0; }
+        
+        h1 { font-size: 3rem; margin-bottom: 1rem; }
+        p { font-size: 1.5rem; }
+        
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+        
+        .nav a {
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .nav a:hover { color: #2563eb; }
+        
+        .dots {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+            border: 2px solid #2563eb;
+            cursor: pointer;
+        }
+        
+        .dot.active { background: #2563eb; transform: scale(1.3); }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a data-index="0">首页</a>
+        <a data-index="1">关于我们</a>
+        <a data-index="2">项目展示</a>
+        <a data-index="3">团队成员</a>
+        <a data-index="4">招新信息</a>
+        <a data-index="5">联系我们</a>
+    </div>
+    
+    <div class="dots">
+        <div class="dot active" data-index="0"></div>
+        <div class="dot" data-index="1"></div>
+        <div class="dot" data-index="2"></div>
+        <div class="dot" data-index="3"></div>
+        <div class="dot" data-index="4"></div>
+        <div class="dot" data-index="5"></div>
+    </div>
+    
+    <div class="fullpage" id="fullpage">
+        <div class="section">
+            <h1>第1页 - 首页</h1>
+            <p>欢迎来到406实训室</p>
+        </div>
+        <div class="section">
+            <h1>第2页 - 关于我们</h1>
+            <p>406实训室是一个专注于技术创新与实践的团队</p>
+        </div>
+        <div class="section">
+            <h1>第3页 - 项目展示</h1>
+            <p>这里展示我们的项目</p>
+        </div>
+        <div class="section">
+            <h1>第4页 - 团队成员</h1>
+            <p>这是我们的团队</p>
+        </div>
+        <div class="section">
+            <h1>第5页 - 招新信息</h1>
+            <p>我们正在招新</p>
+        </div>
+        <div class="section">
+            <h1>第6页 - 联系我们</h1>
+            <p>联系我们吧</p>
+        </div>
+    </div>
+
+    <script>
+        const fullpage = document.getElementById('fullpage');
+        const navLinks = document.querySelectorAll('.nav a');
+        const dots = document.querySelectorAll('.dot');
+        let currentIndex = 0;
+        let isAnimating = false;
+        
+        function goTo(index) {
+            if (index < 0 || index >= 6 || isAnimating) return;
+            isAnimating = true;
+            currentIndex = index;
+            fullpage.style.transform = 'translateY(-' + (currentIndex * 100) + 'vh)';
+            
+            navLinks.forEach((a, i) => a.style.color = i === currentIndex ? '#2563eb' : '#333');
+            dots.forEach((d, i) => {
+                d.classList.remove('active');
+                if (i === currentIndex) d.classList.add('active');
+            });
+            
+            setTimeout(() => isAnimating = false, 1000);
+        }
+        
+        navLinks.forEach(a => a.addEventListener('click', () => goTo(parseInt(a.dataset.index))));
+        dots.forEach(d => d.addEventListener('click', () => goTo(parseInt(d.dataset.index))));
+        
+        let wheelTimeout;
+        document.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            clearTimeout(wheelTimeout);
+            wheelTimeout = setTimeout(() => {
+                if (isAnimating) return;
+                goTo(e.deltaY > 0 ? currentIndex + 1 : currentIndex - 1);
+            }, 50);
+        }, { passive: false });
+        
+        document.addEventListener('keydown', (e) => {
+            if (isAnimating) return;
+            if (e.key === 'ArrowDown' || e.key === 'PageDown') goTo(currentIndex + 1);
+            if (e.key === 'ArrowUp' || e.key === 'PageUp') goTo(currentIndex - 1);
+        });
+    </script>
+</body>
+</html>
