@@ -117,7 +117,7 @@
             top: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 40%, rgba(0, 0, 0, 0.4) 70%, rgba(0, 0, 0, 0) 100%);
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 40%, rgba(255, 255, 255, 0.4) 70%, rgba(0, 0, 0, 0) 100%);
             padding: 1.35rem 20px 2.4rem 20px;
             z-index: 100;
             display: flex;
@@ -128,14 +128,17 @@
         .nav-brand {
             font-size: 1.5rem;
             font-weight: 700;
-            color: white;
+            color: black;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .nav-logo {
-            height: 40px;          /* 根据你的 Logo 实际大小调整 */
+            height: 40px;
             width: auto;
-            border-radius: 8px;    /* 可选：圆角 */
+            border-radius: 8px;
         }
         
         .nav-links {
@@ -149,7 +152,7 @@
         .nav-dropdown-toggle {
             cursor: pointer;
             text-decoration: none;
-            color: white;
+            color: black;
             background: none;
             border: none;
             padding: 0.35rem 0;
@@ -212,7 +215,7 @@
             min-width: 190px;
             padding: 0.75rem;
             border-radius: 16px;
-            background: rgba(15, 23, 42, 0.82);
+            background: rgba(255, 255, 255, 0.82);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255,255,255,0.12);
             display: flex;
@@ -717,6 +720,17 @@
             background: rgba(255,255,255,0.15);
         }
         
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         @media (max-width: 768px) {
             .nav {
                 padding: 1rem 16px 2rem 16px;
@@ -778,7 +792,7 @@
 
     <div class="nav">
         <a class="nav-brand" href="#home-section">
-            <img src="images/logo.png" alt="406实训室Logo" class="nav-logo">
+            <img src="image/logo.png" alt="406实训室Logo" class="nav-logo">
             <span>406实训室</span>
         </a>
         <div class="nav-links">
@@ -1155,6 +1169,30 @@
             sectionScrollState.set(section, { target, rafId });
         }
 
+        const animatedSections = new Set();
+        
+        // 初始化所有section的隐藏状态
+        function initAllSections() {
+            sections.forEach((section, index) => {
+                const contentWrapper = section.querySelector('.content-wrapper');
+                if (contentWrapper) {
+                    contentWrapper.classList.add('fade-in');
+                }
+            });
+        }
+        
+        // 触发section的淡入动画
+        function animateSectionContent(index) {
+            const section = sections[index];
+            if (!section || animatedSections.has(index)) return;
+            
+            animatedSections.add(index);
+            const contentWrapper = section.querySelector('.content-wrapper');
+            if (contentWrapper) {
+                contentWrapper.classList.add('visible');
+            }
+        }
+
         function goToSection(index, options = {}) {
             const { enterFrom = 'top', force = false } = options;
 
@@ -1167,10 +1205,12 @@
             setSectionScroll(index, enterFrom === 'bottom' ? 'bottom' : 'top');
             updateBackgroundStage(currentIndex);
             updateTopNavActive(currentIndex);
-
+            
             window.setTimeout(function () {
                 isAnimating = false;
-            }, 850);
+                // 页面滚动完成后再触发淡入动画
+                animateSectionContent(currentIndex);
+            }, 650);
         }
 
         function handleDirectionalScroll(deltaY) {
@@ -1251,6 +1291,14 @@
         updateBackgroundStage(currentIndex);
         updateTopNavActive(currentIndex);
         setSectionScroll(0, 'top');
+
+        // 初始化所有section的隐藏状态
+        initAllSections();
+
+        // 页面加载时显示首页的淡入动画
+        setTimeout(() => {
+            animateSectionContent(0);
+        }, 300);
 
         const contactForm = document.getElementById('contactForm');
         if (contactForm) {
