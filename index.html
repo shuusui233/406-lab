@@ -471,6 +471,38 @@
             justify-content: center;
             color: rgba(255,255,255,0.7);
         }
+
+        .project-image video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background: #000;
+        }
+
+        .project-card-video-preview .project-info {
+            padding: 1rem 1.2rem;
+        }
+
+        .project-card-video-preview .project-image {
+            height: 260px;
+            background: #000;
+        }
+
+        .project-card-video-preview .project-image video {
+            object-fit: contain;
+        }
+
+        .project-card-video-preview .project-info h3 {
+            font-size: 1rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .project-card-video-preview .project-info p {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            margin-bottom: 0;
+        }
         
         .project-info {
             padding: 1.5rem;
@@ -563,8 +595,8 @@
         }
 
         .mentor-role {
-            color: var(--accent-color);
-            font-size: 0.95rem;
+            color: #e0e0e0;
+            font-size: 1rem;
             margin-bottom: 0.9rem;
         }
 
@@ -662,6 +694,31 @@
             padding: 2rem;
             border: 1px solid rgba(255,255,255,0.1);
         }
+
+        .contact-info-label {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.8rem;
+            margin-bottom: 1rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.14);
+            color: rgba(255,255,255,0.82);
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+        }
+
+        .contact-info-title {
+            color: white;
+            font-size: 1.7rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .contact-info-desc {
+            color: rgba(255,255,255,0.72);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
         
         .contact-form {
             background: rgba(255,255,255,0.08);
@@ -672,16 +729,46 @@
         }
         
         .contact-item {
-            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding: 1rem 1.1rem;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-item-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(245,158,11,0.16);
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        .contact-item-body {
+            min-width: 0;
         }
         
         .contact-item h3 {
             color: white;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.35rem;
+            font-size: 1rem;
         }
         
         .contact-item p {
             color: rgba(255,255,255,0.7);
+            line-height: 1.7;
         }
         
         .form-group {
@@ -730,6 +817,7 @@
             opacity: 1;
             transform: translateY(0);
         }
+
 
         @media (max-width: 768px) {
             .nav {
@@ -793,7 +881,7 @@
     <div class="nav">
         <a class="nav-brand" href="#home-section">
             <img src="image/logo.png" alt="406实训室Logo" class="nav-logo">
-            <span>406实训室</span>
+            <span class="lab-name">406实训室</span>
         </a>
         <div class="nav-links">
             <a href="#home-section" class="nav-link active">首页</a>
@@ -806,8 +894,8 @@
                     <a href="#research-section" class="nav-link">人工智能研究</a>
                 </div>
             </div>
-            <a href="#recruit-section" class="nav-link">招新报名</a>
-            <a href="#contact-section" class="nav-link">联系我们</a>
+            <a href="#recruit-section" class="nav-link">招新信息</a>
+            <a href="#contact-section" class="nav-link">招新报名</a>
         </div>
     </div>
     
@@ -885,17 +973,17 @@
                     </div>
                 </div>
                 <div class="content-block">
-                    <h3 class="block-title">团队成员</h3>
+                    <h3 class="block-title">教师团队</h3>
                     <div class="mentor-grid">
                         <div class="mentor-card">
-                            <h4>UE方向指导老师</h4>
-                            <div class="mentor-role">实时渲染 / 场景搭建</div>
-                            <p>负责 UE5 场景开发、蓝图交互、实时渲染优化与项目落地指导。</p>
+                            <h4>杨振樱 & 谢文智</h4>
+                            <div class="mentor-role"><strong>核心 UE 开发</strong></div>
+                            <p>负责游戏逻辑与系统架构，带领团队完成多个UE项目开发。</p>
                         </div>
                         <div class="mentor-card">
-                            <h4>虚拟仿真指导老师</h4>
-                            <div class="mentor-role">VR / 数字孪生</div>
-                            <p>负责 VR 交互逻辑、设备接入和数字孪生项目中的应用场景设计。</p>
+                            <h4>代一凡</h4>
+                            <div class="mentor-role"><strong>资深美术建模</strong></div>
+                            <p>负责高品质资产与场景构建，打造沉浸式虚拟体验。</p>
                         </div>
                     </div>
                 </div>
@@ -912,11 +1000,16 @@
                 <div class="content-block">
                     <h3 class="block-title">项目作品</h3>
                     <div class="projects-grid">
-                        <div class="project-card">
-                            <div class="project-image">AI 宣传片</div>
+                        <div class="project-card project-card-video-preview">
+                            <div class="project-image">
+                                <video muted playsinline preload="metadata" controls>
+                                    <source src="video/归墟令_第一组.mp4" type="video/mp4">
+                                    您的浏览器不支持视频播放。
+                                </video>
+                            </div>
                             <div class="project-info">
-                                <h3>406实训室 AI 宣传片</h3>
-                                <p>结合生成式视频、数字人口播与动态包装，完成实训室介绍、成果展示和招新传播内容。</p>
+                                <h3>归墟令</h3>
+                                <p>AI影视创作项目作品展示，卡片内自动静音预览视频内容。</p>
                             </div>
                         </div>
                         <div class="project-card">
@@ -929,17 +1022,17 @@
                     </div>
                 </div>
                 <div class="content-block">
-                    <h3 class="block-title">团队成员</h3>
+                    <h3 class="block-title">教师团队</h3>
                     <div class="mentor-grid">
                         <div class="mentor-card">
-                            <h4>AI影视指导老师</h4>
-                            <div class="mentor-role">内容策划 / 生成式视频</div>
-                            <p>负责短片脚本策划、分镜调度、提示词设计和 AI 影视工作流搭建。</p>
+                            <h4>马庆宇</h4>
+                            <div class="mentor-role">金牌编剧</div>
+                            <p>负责创意剧本与深度叙事，为AI影视注入故事灵魂，指导学生完成多部原创短片。</p>
                         </div>
                         <div class="mentor-card">
-                            <h4>AIGC创作指导老师</h4>
-                            <div class="mentor-role">剪辑 / 包装 / 发布</div>
-                            <p>负责配音、剪辑、视觉包装与整片节奏把控，指导学生完成成片输出。</p>
+                            <h4>庞凯文</h4>
+                            <div class="mentor-role">AI 视频专家</div>
+                            <p>负责生成式视频全流程制作，让AI成为摄影机和特效师，带队冲击AI创作竞赛。</p>
                         </div>
                     </div>
                 </div>
@@ -1033,20 +1126,32 @@
         
         <div class="section contact" id="contact-section">
             <div class="content-wrapper">
-                <h2 class="section-title">联系我们</h2>
+                <h2 class="section-title">招新报名</h2>
                 <div class="contact-content">
                     <div class="contact-info">
+                        <span class="contact-info-label">CONTACT</span>
+                        <h3 class="contact-info-title">联系我们</h3>
+                        <p class="contact-info-desc">如果你想了解招新流程、技术方向或加入方式，可以通过下面的信息联系406实训室，我们会尽快回复你。</p>
                         <div class="contact-item">
-                            <h3>地址</h3>
-                            <p>XX大学XX校区XX楼406室</p>
+                            <div class="contact-item-icon">址</div>
+                            <div class="contact-item-body">
+                                <h3>地址</h3>
+                                <p>XX大学XX校区XX楼406室</p>
+                            </div>
                         </div>
                         <div class="contact-item">
-                            <h3>邮箱</h3>
-                            <p>contact@406lab.com</p>
+                            <div class="contact-item-icon">邮</div>
+                            <div class="contact-item-body">
+                                <h3>邮箱</h3>
+                                <p>contact@406lab.com</p>
+                            </div>
                         </div>
                         <div class="contact-item">
-                            <h3>QQ群</h3>
-                            <p>123456789</p>
+                            <div class="contact-item-icon">群</div>
+                            <div class="contact-item-body">
+                                <h3>QQ群</h3>
+                                <p>123456789</p>
+                            </div>
                         </div>
                     </div>
                     <form class="contact-form" id="contactForm">
