@@ -343,6 +343,65 @@
             line-height: 1.8;
             color: rgba(255,255,255,0.9);
         }
+
+        .about-kicker {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.8rem;
+            margin-bottom: 1rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.14);
+            color: rgba(255,255,255,0.82);
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+        }
+
+        .about-text h2 {
+            color: white;
+            font-size: 2rem;
+            line-height: 1.35;
+            margin-bottom: 1rem;
+        }
+
+        .about-lead {
+            font-size: 1.03rem;
+            line-height: 1.9;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 1.4rem;
+        }
+
+        .about-points {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-point {
+            padding: 1rem 1.1rem;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .about-point strong {
+            display: block;
+            margin-bottom: 0.3rem;
+            color: white;
+            font-size: 0.98rem;
+        }
+
+        .about-point span {
+            color: rgba(255,255,255,0.72);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .about-note {
+            color: rgba(255,255,255,0.72);
+            line-height: 1.8;
+        }
         
         .about-text p {
             margin-bottom: 20px;
@@ -383,6 +442,21 @@
             margin-bottom: 10px;
             color: #fff;
         }
+
+        .feature-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.85rem;
+            padding: 0.28rem 0.7rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.14);
+            color: rgba(255,255,255,0.72);
+            font-size: 0.78rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
         
         .feature-card p {
             font-size: 0.9rem;
@@ -396,7 +470,7 @@
         }
 
         .direction-card::after {
-            content: '查看方向';
+            content: '点击查看方向  →';
             display: inline-block;
             margin-top: 1rem;
             font-size: 0.85rem;
@@ -727,6 +801,31 @@
             padding: 2rem;
             border: 1px solid rgba(255,255,255,0.1);
         }
+
+        .contact-form-label {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.8rem;
+            margin-bottom: 1rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.14);
+            color: rgba(255,255,255,0.82);
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+        }
+
+        .contact-form-title {
+            color: white;
+            font-size: 1.7rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .contact-form-desc {
+            color: rgba(255,255,255,0.72);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
         
         .contact-item {
             display: flex;
@@ -794,6 +893,15 @@
             color: white;
             transition: all 0.3s ease;
         }
+
+        .form-group input {
+            min-height: 48px;
+        }
+
+        .form-group textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
         
         .form-group input::placeholder,
         .form-group textarea::placeholder {
@@ -805,6 +913,17 @@
             outline: none;
             border-color: var(--accent-color);
             background: rgba(255,255,255,0.15);
+        }
+
+        .contact-form-actions {
+            margin-top: 0.5rem;
+        }
+
+        .contact-submit {
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+            padding: 14px 20px;
         }
         
         .fade-in {
@@ -847,6 +966,10 @@
 
             .about-features {
                 flex-direction: column;
+            }
+
+            .about-points {
+                grid-template-columns: 1fr;
             }
 
             .feature-card,
@@ -913,33 +1036,47 @@
                 <h2 class="section-title">关于我们</h2>
                 <div class="about-content">
                     <div class="about-text">
-                        <h2>实训室概况</h2>
-                        <p>406实训室是一个融合“<strong>硬核开发</strong>”与“<strong>创意艺术</strong>”的综合实验室。
-
-我们专注于三大方向：<strong>UE互动开发</strong>（游戏/数字孪生/VR）、<strong>AI影视创作</strong>（生成式短片/短剧）、<strong>人工智能研究</strong>（算法/竞赛/论文）。
-
-在这里，技术不再是冰冷的代码，艺术也挣脱了传统边界。你的每一个脑洞，都能被精准实现。</p>
-
-                        <h2>为什么选择406实训室？</h2>
-                        <p><strong>分层培养</strong>：无论想搞开发、艺术还是算法，都有你的位置。<br>
-                        <strong>实战经验</strong>：参与真实商业级项目，积累硬核作品集。<br>
-                        <strong>竞赛加持</strong>：完备的导师指导，助你拿奖拿到手软。</p>
+                        <span class="about-kicker">ABOUT 406 LAB</span>
+                        <h2>让技术、创意与实践在同一个空间里发生</h2>
+                        <p class="about-lead">406实训室是一个融合<strong>硬核开发</strong>、<strong>创意表达</strong>与<strong>项目实战</strong>的综合实验室，围绕UE互动开发、AI影视创作与人工智能研究三大方向开展学习、训练与作品落地。</p>
+                        <div class="about-points">
+                            <div class="about-point">
+                                <strong>分层培养</strong>
+                                <span>开发、艺术、算法都有对应的成长路径，新手也能逐步进入状态。</span>
+                            </div>
+                            <div class="about-point">
+                                <strong>项目实战</strong>
+                                <span>参与真实项目和作品制作，把兴趣转化成可展示的成果。</span>
+                            </div>
+                            <div class="about-point">
+                                <strong>导师指导</strong>
+                                <span>围绕方向学习、流程协作和作品打磨提供持续支持。</span>
+                            </div>
+                            <div class="about-point">
+                                <strong>成果沉淀</strong>
+                                <span>兼顾作品集、竞赛、论文和场景落地，帮助能力持续成长。</span>
+                            </div>
+                        </div>
+                        <p class="about-note">如果你已经对某个方向感兴趣，可以直接点击右侧卡片跳转查看具体内容。</p>
                     </div>
                     <div class="about-features">
                         <a class="feature-card direction-card" href="#ue-section">
+                            <div class="feature-tag">Direction 01</div>
                             <div class="feature-icon">&#127918;</div>
                             <h3>UE互动开发</h3>
-                            <p>UE5/VR/数字孪生</p>
+                            <p>UE5 / VR / 数字孪生 / 实时交互</p>
                         </a>
                         <a class="feature-card direction-card" href="#ai-section">
+                            <div class="feature-tag">Direction 02</div>
                             <div class="feature-icon">&#127916;</div>
                             <h3>AI影视创作</h3>
-                            <p>生成式AI/短剧/宣传片</p>
+                            <p>生成式AI / 短剧 / 宣传片 / 视觉表达</p>
                         </a>
                         <a class="feature-card direction-card" href="#research-section">
+                            <div class="feature-tag">Direction 03</div>
                             <div class="feature-icon">&#129504;</div>
                             <h3>人工智能研究</h3>
-                            <p>论文/竞赛/场景落地</p>
+                            <p>算法 / 竞赛 / 论文 / 场景落地</p>
                         </a>
                     </div>
                 </div>
@@ -1026,12 +1163,12 @@
                     <div class="mentor-grid">
                         <div class="mentor-card">
                             <h4>马庆宇</h4>
-                            <div class="mentor-role">金牌编剧</div>
+                            <div class="mentor-role"><strong>金牌编剧</strong></div>
                             <p>负责创意剧本与深度叙事，为AI影视注入故事灵魂，指导学生完成多部原创短片。</p>
                         </div>
                         <div class="mentor-card">
                             <h4>庞凯文</h4>
-                            <div class="mentor-role">AI 视频专家</div>
+                            <div class="mentor-role"><strong>AI 视频专家</strong></div>
                             <p>负责生成式视频全流程制作，让AI成为摄影机和特效师，带队冲击AI创作竞赛。</p>
                         </div>
                     </div>
@@ -1155,19 +1292,24 @@
                         </div>
                     </div>
                     <form class="contact-form" id="contactForm">
+                        <span class="contact-form-label">APPLY</span>
+                        <h3 class="contact-form-title">填写报名信息</h3>
+                        <p class="contact-form-desc">留下你的基本信息和想法，我们会根据报名情况与您联系，安排后续沟通。</p>
                         <div class="form-group">
                             <label for="name">姓名</label>
-                            <input type="text" id="name" name="name" required>
+                            <input type="text" id="name" name="name" placeholder="请输入你的姓名" required>
                         </div>
                         <div class="form-group">
                             <label for="email">邮箱</label>
-                            <input type="email" id="email" name="email" required>
+                            <input type="email" id="email" name="email" placeholder="请输入常用邮箱" required>
                         </div>
                         <div class="form-group">
                             <label for="message">留言</label>
-                            <textarea id="message" name="message" rows="5" required></textarea>
+                            <textarea id="message" name="message" rows="5" placeholder="可以简单介绍你的兴趣方向、相关经历或想加入的原因" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">发送消息</button>
+                        <div class="contact-form-actions">
+                            <button type="submit" class="btn btn-primary contact-submit">提交报名信息</button>
+                        </div>
                     </form>
                 </div>
             </div>
