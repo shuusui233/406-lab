@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>406实训室 - 人工智能研究作品</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+            color: #0f172a;
+            background:
+                radial-gradient(circle at top left, rgba(139, 92, 246, 0.18), transparent 28%),
+                radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 24%),
+                linear-gradient(180deg, #f5f3ff 0%, #f8fafc 46%, #eef2ff 100%);
+        }
+
+        .page-shell {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 32px 0 56px;
+        }
+
+        .page-header {
+            position: sticky;
+            top: 16px;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding: 16px 20px;
+            margin-bottom: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.74);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+        }
+
+        .brand-block h1 {
+            font-size: 1.55rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .brand-block p {
+            color: #475569;
+            font-size: 0.96rem;
+        }
+
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 0.8rem 1.25rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            color: #ffffff;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            box-shadow: 0 12px 28px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-secondary {
+            color: #4f46e5;
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.18);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero-card {
+            padding: 32px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(76, 29, 149, 0.94), rgba(99, 102, 241, 0.88));
+            color: #ffffff;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.88rem;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        .hero-card h2 {
+            margin-top: 1rem;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.2;
+        }
+
+        .hero-card p {
+            max-width: 760px;
+            margin-top: 1rem;
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.8;
+        }
+
+        .works-section {
+            margin-top: 28px;
+            padding: 28px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.68);
+            border: 1px solid rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+        }
+
+        .section-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-meta-left span {
+            display: inline-flex;
+            padding: 0.32rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+        }
+
+        .section-meta h3 {
+            margin-top: 0.75rem;
+            font-size: 1.8rem;
+        }
+
+        .section-meta p {
+            margin-top: 0.8rem;
+            max-width: 760px;
+            color: #475569;
+            line-height: 1.8;
+        }
+
+        .work-count {
+            align-self: flex-start;
+            padding: 0.72rem 0.95rem;
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.05);
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .work-card {
+            padding: 22px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .work-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+        }
+
+        .work-type {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 0.85rem;
+            padding: 0.32rem 0.72rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: rgba(15, 23, 42, 0.07);
+            color: #475569;
+        }
+
+        .work-card h4 {
+            font-size: 1.08rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .work-card p {
+            color: #475569;
+            line-height: 1.75;
+        }
+
+        @media (max-width: 768px) {
+            .page-shell {
+                width: min(100% - 24px, 1180px);
+                padding-top: 16px;
+            }
+
+            .page-header {
+                position: static;
+                padding: 16px;
+            }
+
+            .hero-card,
+            .works-section {
+                padding: 22px 18px;
+            }
+
+            .section-meta h3 {
+                font-size: 1.5rem;
+            }
+
+            .header-actions {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page-shell">
+        <header class="page-header">
+            <div class="brand-block">
+                <h1>406实训室</h1>
+                <p>人工智能研究作品页</p>
+            </div>
+            <div class="header-actions">
+                <a class="btn btn-secondary" href="works-ue.html">切换到UE方向</a>
+                <a class="btn btn-secondary" href="works-ai.html">切换到AI影视</a>
+                <button type="button" class="btn btn-primary" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = 'index.html#research-section'; }">返回上一页</button>
+            </div>
+        </header>
+
+        <section class="hero-card">
+            <span class="hero-tag">AI RESEARCH WORKS</span>
+            <h2>人工智能研究全部作品</h2>
+            <p>这里集中展示 406 实训室在竞赛训练、论文复现、场景落地和数据建模分析方向的项目成果，后续新增作品可继续直接追加在本页。</p>
+        </section>
+
+        <section class="works-section">
+            <div class="section-meta">
+                <div class="section-meta-left">
+                    <span>技术方向 03</span>
+                    <h3>人工智能研究</h3>
+                    <p>聚焦算法验证、竞赛训练和场景落地，强调从问题定义、模型训练到应用部署的完整研究流程。</p>
+                </div>
+                <div class="work-count">共 4 个作品</div>
+            </div>
+            <div class="works-grid">
+                <article class="work-card">
+                    <div class="work-type">竞赛项目</div>
+                    <h4>智能识别竞赛项目</h4>
+                    <p>围绕图像识别与分类任务完成数据清洗、模型训练和结果分析，服务竞赛备赛与答辩展示。</p>
+                </article>
+                <article class="work-card">
+                    <div class="work-type">场景应用</div>
+                    <h4>校园场景 AI 应用落地</h4>
+                    <p>结合问答助手、视觉识别与业务流程优化，探索人工智能在校园服务中的实际应用。</p>
+                </article>
+                <article class="work-card">
+                    <div class="work-type">论文训练</div>
+                    <h4>文献复现与模型对比研究</h4>
+                    <p>围绕典型模型开展论文阅读、实验复现和效果对比，沉淀研究方法与实验报告能力。</p>
+                </article>
+                <article class="work-card">
+                    <div class="work-type">数据分析</div>
+                    <h4>多源数据建模分析实践</h4>
+                    <p>针对结构化与图像数据完成特征工程、模型评估与可视化分析，支撑课题探索和应用验证。</p>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

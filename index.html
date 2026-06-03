@@ -313,6 +313,19 @@
             background: var(--primary-color);
             color: white;
         }
+
+        .btn-outline-light {
+            background: rgba(255,255,255,0.08);
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+        }
+
+        .btn-outline-light:hover {
+            background: rgba(255,255,255,0.16);
+            border-color: rgba(var(--direction-accent-rgb), 0.42);
+            transform: translateY(-2px);
+        }
         
         .section-title {
             font-size: 2.5rem;
@@ -326,20 +339,27 @@
         
         .about-content {
             display: flex;
-            gap: 60px;
-            align-items: center;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: stretch;
         }
 
         .about {
             justify-content: center;
-            padding-top: 96px;
-            padding-bottom: 72px;
+            padding-top: 112px;
+            padding-bottom: 40px;
+        }
+
+        .about .section-title {
+            margin-top: 0.75rem;
+            margin-bottom: 1.6rem;
         }
         
         .about-text {
-            flex: 1;
-            font-size: 1.1rem;
+            width: 100%;
+            max-width: 980px;
+            margin: 0 auto;
+            font-size: 1.16rem;
             line-height: 1.8;
             color: rgba(255,255,255,0.9);
         }
@@ -348,38 +368,38 @@
             display: inline-flex;
             align-items: center;
             padding: 0.35rem 0.8rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             border-radius: 999px;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.14);
             color: rgba(255,255,255,0.82);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             letter-spacing: 0.06em;
         }
 
         .about-text h2 {
             color: white;
-            font-size: 2rem;
+            font-size: 1.92rem;
             line-height: 1.35;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .about-lead {
-            font-size: 1.03rem;
-            line-height: 1.9;
+            font-size: 1.06rem;
+            line-height: 1.75;
             color: rgba(255,255,255,0.8);
-            margin-bottom: 1.4rem;
+            margin-bottom: 1rem;
         }
 
         .about-points {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.9rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
         }
 
         .about-point {
-            padding: 1rem 1.1rem;
+            padding: 0.8rem 0.9rem;
             border-radius: 16px;
             background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.08);
@@ -394,13 +414,14 @@
 
         .about-point span {
             color: rgba(255,255,255,0.72);
-            font-size: 0.9rem;
-            line-height: 1.7;
+            font-size: 0.88rem;
+            line-height: 1.55;
         }
 
         .about-note {
             color: rgba(255,255,255,0.72);
-            line-height: 1.8;
+            line-height: 1.7;
+            font-size: 1rem;
         }
         
         .about-text p {
@@ -408,22 +429,22 @@
         }
         
         .about-features {
-            flex: 1;
-            display: flex;
-            gap: 25px;
-            flex-wrap: wrap;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.95rem;
+            align-items: stretch;
         }
         
         .feature-card {
-            flex: 1;
-            min-width: 150px;
             background: rgba(255,255,255,0.08);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 30px 20px;
+            padding: 1.2rem 1rem;
             text-align: center;
             transition: all 0.3s ease;
             border: 1px solid rgba(255,255,255,0.1);
+            min-height: 100%;
         }
         
         .feature-card:hover {
@@ -433,13 +454,13 @@
         }
         
         .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 2.3rem;
+            margin-bottom: 0.7rem;
         }
         
         .feature-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
+            font-size: 1.16rem;
+            margin-bottom: 0.45rem;
             color: #fff;
         }
 
@@ -447,13 +468,13 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 0.85rem;
+            margin-bottom: 0.7rem;
             padding: 0.28rem 0.7rem;
             border-radius: 999px;
             background: rgba(255,255,255,0.08);
             border: 1px solid rgba(255,255,255,0.14);
             color: rgba(255,255,255,0.72);
-            font-size: 0.78rem;
+            font-size: 0.82rem;
             letter-spacing: 0.06em;
             text-transform: uppercase;
         }
@@ -472,8 +493,8 @@
         .direction-card::after {
             content: '点击查看方向  →';
             display: inline-block;
-            margin-top: 1rem;
-            font-size: 0.85rem;
+            margin-top: 0.75rem;
+            font-size: 0.84rem;
             letter-spacing: 0.08em;
             color: rgba(255,255,255,0.78);
         }
@@ -599,6 +620,12 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
+        }
+
+        .projects-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: flex-end;
         }
         
         .project-card {
@@ -1064,7 +1091,7 @@
             }
 
             .about-features {
-                flex-direction: column;
+                grid-template-columns: 1fr;
             }
 
             .about-points {
@@ -1107,7 +1134,7 @@
 
     <div class="nav">
         <a class="nav-brand" href="#home-section">
-            <img src="image/logo.png" alt="406实训室Logo" class="nav-logo">
+            <!-- <img src="image/logo.png" alt="406实训室Logo" class="nav-logo"> -->
             <span class="lab-name">406实训室</span>
         </a>
         <div class="nav-links">
@@ -1161,7 +1188,7 @@
                                 <span>兼顾作品集、竞赛、论文和场景落地，帮助能力持续成长。</span>
                             </div>
                         </div>
-                        <p class="about-note">如果你已经对某个方向感兴趣，可以直接点击右侧卡片跳转查看具体内容。</p>
+                        <p class="about-note">如果你已经对某个方向感兴趣，可以直接点击下方卡片跳转查看具体内容。</p>
                     </div>
                     <div class="about-features">
                         <a class="feature-card direction-card" href="#ue-section">
@@ -1212,6 +1239,9 @@
                             </div>
                         </div>
                     </div>
+                    <div class="projects-actions">
+                        <a class="btn btn-outline-light" href="works-ue.html">更多作品</a>
+                    </div>
                 </div>
                 <div class="content-block">
                     <h3 class="block-title">教师团队</h3>
@@ -1261,6 +1291,9 @@
                             </div>
                         </div>
                     </div>
+                    <div class="projects-actions">
+                        <a class="btn btn-outline-light" href="works-ai.html">更多作品</a>
+                    </div>
                 </div>
                 <div class="content-block">
                     <h3 class="block-title">教师团队</h3>
@@ -1304,6 +1337,9 @@
                                 <p>结合问答助手、视觉识别与业务流程优化，探索人工智能在校园服务中的实际应用。</p>
                             </div>
                         </div>
+                    </div>
+                    <div class="projects-actions">
+                        <a class="btn btn-outline-light" href="works-research.html">更多作品</a>
                     </div>
                 </div>
                 <div class="content-block">
@@ -1464,6 +1500,17 @@
             }
         }
 
+        function getInitialSectionIndex() {
+            const hash = window.location.hash;
+            if (!hash || hash === '#') {
+                return 0;
+            }
+
+            const targetId = hash.slice(1);
+            const targetIndex = getSectionIndexById(targetId);
+            return targetIndex === -1 ? 0 : targetIndex;
+        }
+
         function setSectionScroll(index, position) {
             const targetSection = sections[index];
             if (!targetSection) return;
@@ -1542,7 +1589,7 @@
         }
 
         function goToSection(index, options = {}) {
-            const { enterFrom = 'top', force = false } = options;
+            const { enterFrom = 'top', force = false, skipAnimation = false } = options;
 
             if (index < 0 || index >= sections.length) return;
             if (isAnimating && !force) return;
@@ -1553,7 +1600,18 @@
             setSectionScroll(index, enterFrom === 'bottom' ? 'bottom' : 'top');
             updateBackgroundStage(currentIndex);
             updateTopNavActive(currentIndex);
-            
+
+            const currentSection = sections[currentIndex];
+            if (currentSection && currentSection.id) {
+                window.history.replaceState(null, '', '#' + currentSection.id);
+            }
+
+            if (skipAnimation) {
+                isAnimating = false;
+                animateSectionContent(currentIndex);
+                return;
+            }
+
             window.setTimeout(function () {
                 isAnimating = false;
                 // 页面滚动完成后再触发淡入动画
@@ -1636,17 +1694,17 @@
             }
         });
 
+        const initialSectionIndex = getInitialSectionIndex();
+        currentIndex = initialSectionIndex;
         updateBackgroundStage(currentIndex);
         updateTopNavActive(currentIndex);
-        setSectionScroll(0, 'top');
-
-        // 初始化所有section的隐藏状态
         initAllSections();
+        goToSection(initialSectionIndex, { enterFrom: 'top', force: true, skipAnimation: true });
 
-        // 页面加载时显示首页的淡入动画
-        setTimeout(() => {
-            animateSectionContent(0);
-        }, 300);
+        window.addEventListener('hashchange', function () {
+            const targetIndex = getInitialSectionIndex();
+            goToSection(targetIndex, { enterFrom: 'top', force: true, skipAnimation: true });
+        });
 
         const contactForm = document.getElementById('contactForm');
         if (contactForm) {

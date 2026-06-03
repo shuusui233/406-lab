@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>406实训室 - AI影视创作作品</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+            color: #0f172a;
+            background:
+                radial-gradient(circle at top left, rgba(245, 158, 11, 0.18), transparent 28%),
+                radial-gradient(circle at top right, rgba(239, 68, 68, 0.14), transparent 24%),
+                linear-gradient(180deg, #fff7ed 0%, #f8fafc 46%, #fef2f2 100%);
+        }
+
+        .page-shell {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 32px 0 56px;
+        }
+
+        .page-header {
+            position: sticky;
+            top: 16px;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding: 16px 20px;
+            margin-bottom: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.74);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+        }
+
+        .brand-block h1 {
+            font-size: 1.55rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .brand-block p {
+            color: #475569;
+            font-size: 0.96rem;
+        }
+
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 0.8rem 1.25rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            color: #ffffff;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            box-shadow: 0 12px 28px rgba(239, 68, 68, 0.18);
+        }
+
+        .btn-secondary {
+            color: #c2410c;
+            background: rgba(245, 158, 11, 0.09);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero-card {
+            padding: 32px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(124, 45, 18, 0.94), rgba(239, 68, 68, 0.86));
+            color: #ffffff;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.88rem;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        .hero-card h2 {
+            margin-top: 1rem;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.2;
+        }
+
+        .hero-card p {
+            max-width: 760px;
+            margin-top: 1rem;
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.8;
+        }
+
+        .works-section {
+            margin-top: 28px;
+            padding: 28px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.68);
+            border: 1px solid rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+        }
+
+        .section-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-meta-left span {
+            display: inline-flex;
+            padding: 0.32rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+        }
+
+        .section-meta h3 {
+            margin-top: 0.75rem;
+            font-size: 1.8rem;
+        }
+
+        .section-meta p {
+            margin-top: 0.8rem;
+            max-width: 760px;
+            color: #475569;
+            line-height: 1.8;
+        }
+
+        .work-count {
+            align-self: flex-start;
+            padding: 0.72rem 0.95rem;
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.05);
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .work-card {
+            padding: 22px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .work-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+        }
+
+        .work-type {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 0.85rem;
+            padding: 0.32rem 0.72rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: rgba(15, 23, 42, 0.07);
+            color: #475569;
+        }
+
+        .work-card h4 {
+            font-size: 1.08rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .work-card p {
+            color: #475569;
+            line-height: 1.75;
+        }
+
+        @media (max-width: 768px) {
+            .page-shell {
+                width: min(100% - 24px, 1180px);
+                padding-top: 16px;
+            }
+
+            .page-header {
+                position: static;
+                padding: 16px;
+            }
+
+            .hero-card,
+            .works-section {
+                padding: 22px 18px;
+            }
+
+            .section-meta h3 {
+                font-size: 1.5rem;
+            }
+
+            .header-actions {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page-shell">
+        <header class="page-header">
+            <div class="brand-block">
+                <h1>406实训室</h1>
+                <p>AI影视创作作品页</p>
+            </div>
+            <div class="header-actions">
+                <a class="btn btn-secondary" href="works-ue.html">切换到UE方向</a>
+                <a class="btn btn-secondary" href="works-research.html">切换到AI研究</a>
+                <button type="button" class="btn btn-primary" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = 'index.html#ai-section'; }">返回上一页</button>
+            </div>
+        </header>
+
+        <section class="hero-card">
+            <span class="hero-tag">AI FILM WORKS</span>
+            <h2>AI影视创作全部作品</h2>
+            <p>这里集中展示 406 实训室在 AI 短片、生成式短剧、宣传片包装与剧本分镜可视化方向的项目成果，后续新增作品可继续直接追加在本页。</p>
+        </section>
+
+        <section class="works-section">
+            <div class="section-meta">
+                <div class="section-meta-left">
+                    <span>技术方向 02</span>
+                    <h3>AI影视创作</h3>
+                    <p>覆盖从脚本策划、角色设计到镜头生成、后期合成的完整流程，突出创意表达与内容生产能力。</p>
+                </div>
+                <div class="work-count">共 4 个作品</div>
+            </div>
+            <div class="works-grid">
+                <article class="work-card">
+                    <div class="work-type">AI 短片</div>
+                    <h4>归墟令</h4>
+                    <p>围绕东方幻想题材完成角色视觉设定、镜头组织与成片包装，形成可用于展示与汇报的短片样片。</p>
+                </article>
+                <article class="work-card">
+                    <div class="work-type">生成式短剧</div>
+                    <h4>校园主题 AI 短剧实验</h4>
+                    <p>围绕校园故事设计脚本与分镜，使用 AIGC 进行角色生成、镜头拼接与后期配音。</p>
+                </article>
+                <article class="work-card">
+                    <div class="work-type">宣传片</div>
+                    <h4>学院品牌宣传片生成实验</h4>
+                    <p>尝试将文案、配音、转场和字幕包装流程模块化，提升宣传片的快速出片效率和视觉统一性。</p>
+                </article>
+                <article class="work-card">
+                    <div class="work-type">分镜设计</div>
+                    <h4>AI 剧本分镜可视化练习</h4>
+                    <p>将文本脚本转化为镜头脚本与关键帧预览，用于教学展示、创意沟通与成片前期筹备。</p>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
