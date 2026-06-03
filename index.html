@@ -482,9 +482,58 @@
             justify-content: flex-start;
         }
 
+        #ue-section {
+            --direction-accent: #22d3ee;
+            --direction-accent-rgb: 34, 211, 238;
+        }
+
+        #ai-section {
+            --direction-accent: #f59e0b;
+            --direction-accent-rgb: 245, 158, 11;
+        }
+
+        #research-section {
+            --direction-accent: #8b5cf6;
+            --direction-accent-rgb: 139, 92, 246;
+        }
+
+        .direction-section .content-wrapper {
+            position: relative;
+        }
+
         .direction-header {
             max-width: 780px;
             margin-bottom: 2.2rem;
+            position: relative;
+            padding: 2rem 2rem 1.7rem;
+            border-radius: 28px;
+            overflow: hidden;
+            background:
+                linear-gradient(135deg, rgba(var(--direction-accent-rgb), 0.16), rgba(255,255,255,0.05)),
+                rgba(9, 14, 28, 0.3);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+        }
+
+        .direction-header::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -40px;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(var(--direction-accent-rgb), 0.28) 0%, rgba(var(--direction-accent-rgb), 0) 68%);
+            pointer-events: none;
+        }
+
+        .direction-header .section-title {
+            text-align: left;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, rgba(255,255,255,0.72));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .direction-label {
@@ -495,25 +544,55 @@
             border-radius: 999px;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.14);
-            color: rgba(255,255,255,0.82);
+            color: var(--direction-accent);
             font-size: 0.85rem;
             letter-spacing: 0.06em;
+            box-shadow: inset 0 0 0 1px rgba(var(--direction-accent-rgb), 0.16);
+        }
+
+        #research-section .direction-label {
+            background: rgba(139, 92, 246, 0.32);
+            border-color: rgba(139, 92, 246, 0.55);
+            color: #ffffff;
+            font-weight: 700;
+            box-shadow:
+                inset 0 0 0 1px rgba(255,255,255,0.08),
+                0 8px 20px rgba(0,0,0,0.14);
         }
 
         .direction-desc {
             font-size: 1rem;
             line-height: 1.8;
             color: rgba(255,255,255,0.82);
+            max-width: 680px;
         }
 
         .content-block {
             margin-top: 2rem;
+            padding: 1.6rem;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 14px 32px rgba(0,0,0,0.12);
         }
 
         .block-title {
             margin-bottom: 1.25rem;
             font-size: 1.35rem;
             color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .block-title::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--direction-accent);
+            box-shadow: 0 0 0 6px rgba(var(--direction-accent-rgb), 0.14);
         }
         
         .projects-grid {
@@ -529,21 +608,28 @@
             overflow: hidden;
             transition: all 0.3s ease;
             border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 14px 28px rgba(0,0,0,0.12);
         }
         
         .project-card:hover {
             transform: translateY(-10px);
             background: rgba(255,255,255,0.12);
-            border-color: rgba(255,255,255,0.3);
+            border-color: rgba(var(--direction-accent-rgb), 0.36);
+            box-shadow: 0 20px 36px rgba(0,0,0,0.18);
         }
         
         .project-image {
             height: 200px;
-            background: rgba(255,255,255,0.1);
+            background:
+                linear-gradient(135deg, rgba(var(--direction-accent-rgb), 0.2), rgba(255,255,255,0.05)),
+                rgba(255,255,255,0.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.9);
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
         }
 
         .project-image video {
@@ -585,11 +671,13 @@
         .project-info h3 {
             margin-bottom: 0.5rem;
             color: white;
+            font-size: 1.1rem;
         }
         
         .project-info p {
             color: rgba(255,255,255,0.7);
-            margin-bottom: 1rem;
+            margin-bottom: 0;
+            line-height: 1.75;
         }
         
         .team-grid {
@@ -654,12 +742,23 @@
             padding: 1.8rem;
             border: 1px solid rgba(255,255,255,0.1);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .mentor-card:hover {
             transform: translateY(-8px);
             background: rgba(255,255,255,0.12);
-            border-color: rgba(255,255,255,0.3);
+            border-color: rgba(var(--direction-accent-rgb), 0.32);
+        }
+
+        .mentor-card::before {
+            content: '';
+            position: absolute;
+            inset: 0 auto auto 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--direction-accent), rgba(255,255,255,0));
         }
 
         .mentor-card h4 {
@@ -669,7 +768,7 @@
         }
 
         .mentor-role {
-            color: #e0e0e0;
+            color: rgba(255,255,255,0.78);
             font-size: 1rem;
             margin-bottom: 0.9rem;
         }
@@ -972,6 +1071,11 @@
                 grid-template-columns: 1fr;
             }
 
+            .direction-header,
+            .content-block {
+                padding: 1.3rem;
+            }
+
             .feature-card,
             .direction-card {
                 min-width: 100%;
@@ -1203,17 +1307,14 @@
                     </div>
                 </div>
                 <div class="content-block">
-                    <h3 class="block-title">团队成员</h3>
+                    <h3 class="block-title">教师团队</h3>
                     <div class="mentor-grid">
                         <div class="mentor-card">
-                            <h4>算法研究指导老师</h4>
-                            <div class="mentor-role">模型训练 / 论文写作</div>
-                            <p>负责算法方向选题、实验设计、论文写作规范以及成果凝练指导。</p>
-                        </div>
-                        <div class="mentor-card">
-                            <h4>竞赛指导老师</h4>
-                            <div class="mentor-role">竞赛训练 / 应用落地</div>
-                            <p>负责竞赛选题、代码实现、答辩训练和 AI 场景落地方案指导。</p>
+                            <h4>刘天萌</h4>
+                            <div class="mentor-role"></div>
+                            <p><strong>学术导向</strong>：深度研读文献，发表高质量论文。</p>
+                            <p><strong>竞赛驱动</strong>：互联网+、计算机设计大赛指导。</p>
+                            <p><strong>实战应用</strong>：探索 AI 算法的真实场景落地。</p>
                         </div>
                     </div>
                 </div>
