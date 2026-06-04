@@ -1501,6 +1501,15 @@
         }
 
         function getInitialSectionIndex() {
+            const searchParams = new URLSearchParams(window.location.search);
+            const sectionFromQuery = searchParams.get('section');
+            if (sectionFromQuery) {
+                const queryIndex = getSectionIndexById(sectionFromQuery);
+                if (queryIndex !== -1) {
+                    return queryIndex;
+                }
+            }
+
             const hash = window.location.hash;
             if (!hash || hash === '#') {
                 return 0;
