@@ -88,56 +88,17 @@
             transform: translateY(-2px);
         }
 
-        .hero-card {
-            padding: 32px;
-            border-radius: 28px;
-            background: linear-gradient(135deg, rgba(8, 47, 73, 0.94), rgba(37, 99, 235, 0.88));
-            color: #ffffff;
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
-        }
-
-        .hero-tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.35rem 0.8rem;
-            border-radius: 999px;
-            font-size: 0.88rem;
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.16);
-        }
-
-        .hero-card h2 {
-            margin-top: 1rem;
-            font-size: clamp(2rem, 4vw, 3rem);
-            line-height: 1.2;
-        }
-
-        .hero-card p {
-            max-width: 760px;
-            margin-top: 1rem;
-            color: rgba(255, 255, 255, 0.82);
-            line-height: 1.8;
-        }
-
         .works-section {
-            margin-top: 28px;
-            padding: 28px;
+            margin-top: 12px;
+            padding: 28px 28px 32px;
             border-radius: 28px;
-            background: rgba(255, 255, 255, 0.68);
-            border: 1px solid rgba(255, 255, 255, 0.78);
+            background: rgba(15, 23, 42, 0.58);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             backdrop-filter: blur(14px);
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
         }
 
-        .section-meta {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .section-meta-left span {
+        .section-label {
             display: inline-flex;
             padding: 0.32rem 0.75rem;
             border-radius: 999px;
@@ -147,67 +108,65 @@
             background: linear-gradient(135deg, #06b6d4, #2563eb);
         }
 
-        .section-meta h3 {
-            margin-top: 0.75rem;
-            font-size: 1.8rem;
+        .works-section h2 {
+            margin-top: 0.95rem;
+            font-size: 1.9rem;
+            color: #ffffff;
         }
 
-        .section-meta p {
+        .section-desc {
             margin-top: 0.8rem;
             max-width: 760px;
-            color: #475569;
+            color: rgba(255, 255, 255, 0.72);
             line-height: 1.8;
         }
 
-        .work-count {
-            align-self: flex-start;
-            padding: 0.72rem 0.95rem;
-            border-radius: 16px;
-            background: rgba(15, 23, 42, 0.05);
-            color: #475569;
-            font-weight: 600;
+        .preview-section {
+            margin-top: 1.8rem;
         }
 
-        .works-grid {
+        .preview-header {
+            margin-bottom: 1.2rem;
+        }
+
+        .preview-header h3 {
+            font-size: 1.08rem;
+            color: #ffffff;
+        }
+
+        .preview-header p {
+            margin-top: 0.45rem;
+            color: rgba(255, 255, 255, 0.68);
+            font-size: 0.94rem;
+        }
+
+        .preview-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 1.2rem;
         }
 
-        .work-card {
-            padding: 22px;
-            border-radius: 22px;
-            background: rgba(255, 255, 255, 0.72);
-            border: 1px solid rgba(148, 163, 184, 0.22);
-            box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        .preview-card {
+            text-align: center;
         }
 
-        .work-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
-        }
-
-        .work-type {
-            display: inline-flex;
+        .preview-placeholder {
+            display: flex;
             align-items: center;
-            margin-bottom: 0.85rem;
-            padding: 0.32rem 0.72rem;
-            border-radius: 999px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            background: rgba(15, 23, 42, 0.07);
-            color: #475569;
+            justify-content: center;
+            min-height: 260px;
+            border-radius: 16px;
+            background: rgba(148, 163, 184, 0.18);
+            border: 1px dashed rgba(255, 255, 255, 0.18);
+            color: rgba(255, 255, 255, 0.76);
+            font-weight: 600;
+            letter-spacing: 0.04em;
         }
 
-        .work-card h4 {
-            font-size: 1.08rem;
-            margin-bottom: 0.7rem;
-        }
-
-        .work-card p {
-            color: #475569;
-            line-height: 1.75;
+        .preview-card h4 {
+            margin-top: 0.85rem;
+            font-size: 1rem;
+            color: #ffffff;
         }
 
         @media (max-width: 768px) {
@@ -221,17 +180,16 @@
                 padding: 16px;
             }
 
-            .hero-card,
             .works-section {
                 padding: 22px 18px;
             }
 
-            .section-meta h3 {
-                font-size: 1.5rem;
-            }
-
             .header-actions {
                 justify-content: flex-start;
+            }
+
+            .preview-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -244,48 +202,33 @@
                 <p>UE互动开发作品页</p>
             </div>
             <div class="header-actions">
-                <a class="btn btn-secondary" href="works-ai.html">切换到AI影视</a>
-                <a class="btn btn-secondary" href="works-research.html">切换到AI研究</a>
-                <a class="btn btn-primary" href="index.html?section=ue-section">返回首页UE方向</a>
+                <a class="btn btn-primary" href="index.html?section=ue-section">返回首页</a>
             </div>
         </header>
 
-        <section class="hero-card">
-            <span class="hero-tag">UE WORKS</span>
-            <h2>UE互动开发全部作品</h2>
-            <p>这里集中展示 406 实训室在 UE5 实时交互、VR体验、数字孪生和虚拟仿真方向的项目成果，后续新增作品可继续直接追加在本页。</p>
-        </section>
-
         <section class="works-section">
-            <div class="section-meta">
-                <div class="section-meta-left">
-                    <span>技术方向 01</span>
-                    <h3>UE互动开发</h3>
-                    <p>聚焦虚拟场景构建、沉浸式交互与数字孪生展示，强调实时渲染、交互逻辑和场景落地能力。</p>
+            <span class="section-label">技术方向 01</span>
+            <h2>UE互动开发</h2>
+            <p class="section-desc">仅保留作品预览内容，后续可直接替换为真实封面或演示图。</p>
+            <div class="preview-section">
+                <div class="preview-header">
+                    <h3>作品预览</h3>
+                    <p>素材整理中，内容即将上线。</p>
                 </div>
-                <div class="work-count">共 4 个作品</div>
-            </div>
-            <div class="works-grid">
-                <article class="work-card">
-                    <div class="work-type">数字孪生</div>
-                    <h4>校园数字孪生可视化平台</h4>
-                    <p>基于 UE5 构建教学楼、实验室与设备状态联动的数字孪生演示系统，用于空间展示与场景讲解。</p>
-                </article>
-                <article class="work-card">
-                    <div class="work-type">VR 体验</div>
-                    <h4>沉浸式 VR 互动体验</h4>
-                    <p>围绕校史馆与实训课程设计多人交互流程，完成场景搭建、UI交互和设备适配。</p>
-                </article>
-                <article class="work-card">
-                    <div class="work-type">交互导览</div>
-                    <h4>智慧展厅互动导览系统</h4>
-                    <p>结合触控大屏与三维空间漫游设计展项切换、讲解联动和路线引导，服务教学展示与来访接待。</p>
-                </article>
-                <article class="work-card">
-                    <div class="work-type">实训仿真</div>
-                    <h4>虚拟设备操作训练场景</h4>
-                    <p>围绕实训设备的标准操作流程设计仿真训练模块，支持步骤提示、异常反馈和成果记录。</p>
-                </article>
+                <div class="preview-grid">
+                    <article class="preview-card">
+                        <div class="preview-placeholder">即将上线</div>
+                        <h4>数字孪生</h4>
+                    </article>
+                    <article class="preview-card">
+                        <div class="preview-placeholder">即将上线</div>
+                        <h4>VR互动</h4>
+                    </article>
+                    <article class="preview-card">
+                        <div class="preview-placeholder">即将上线</div>
+                        <h4>虚拟仿真</h4>
+                    </article>
+                </div>
             </div>
         </section>
     </main>

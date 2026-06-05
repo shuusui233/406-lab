@@ -77,6 +77,11 @@
             height: 100vh;
             position: relative;
             z-index: 1;
+            visibility: hidden;
+        }
+
+        .fullpage.is-ready {
+            visibility: visible;
             transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
         }
         
@@ -1709,6 +1714,7 @@
         updateTopNavActive(currentIndex);
         initAllSections();
         goToSection(initialSectionIndex, { enterFrom: 'top', force: true, skipAnimation: true });
+        fullpage.classList.add('is-ready');
 
         window.addEventListener('hashchange', function () {
             const targetIndex = getInitialSectionIndex();
