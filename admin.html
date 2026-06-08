@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>406实训室 - 管理后台</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+    <!-- 登录页面 -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <h1>管理后台</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-login">登录</button>
+            </form>
+            <p id="loginError" class="error-msg"></p>
+        </div>
+    </div>
+
+    <!-- 管理后台主界面 -->
+    <div id="adminPage" class="admin-container" style="display: none;">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>管理后台</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                    <span class="icon">📊</span>
+                    <span>仪表盘</span>
+                </a>
+                <a href="#content" class="nav-item" data-section="content">
+                    <span class="icon">📝</span>
+                    <span>内容管理</span>
+                </a>
+                <a href="#applications" class="nav-item" data-section="applications">
+                    <span class="icon">📋</span>
+                    <span>报名管理</span>
+                </a>
+                <a href="#projects" class="nav-item" data-section="projects">
+                    <span class="icon">🎨</span>
+                    <span>作品管理</span>
+                </a>
+                <a href="#settings" class="nav-item" data-section="settings">
+                    <span class="icon">⚙️</span>
+                    <span>系统设置</span>
+                </a>
+                <a href="#users" class="nav-item" data-section="users">
+                    <span class="icon">👥</span>
+                    <span>用户管理</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn-logout">退出登录</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <!-- 仪表盘 -->
+            <section id="dashboard" class="content-section active">
+                <h2>仪表盘</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📄</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="pageViews">0</span>
+                            <span class="stat-label">页面浏览</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👁️</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="visitors">0</span>
+                            <span class="stat-label">访问量</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="todayVisits">0</span>
+                            <span class="stat-label">今日访问</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="activeUsers">0</span>
+                            <span class="stat-label">在线用户</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>访问趋势</h3>
+                    <div id="chart" class="chart-placeholder">
+                        <p>图表区域</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 内容管理 -->
+            <section id="content" class="content-section">
+                <div class="section-header">
+                    <h2>内容管理</h2>
+                    <button class="btn-add" onclick="window.addContent()">+ 添加内容</button>
+                </div>
+                <div class="content-list">
+                    <!-- 内容数据由 API 动态加载 -->
+                </div>
+            </section>
+
+            <!-- 系统设置 -->
+            <section id="settings" class="content-section">
+                <h2>系统设置</h2>
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label for="siteName">网站名称</label>
+                        <input type="text" id="siteName" value="406实训室">
+                    </div>
+                    <div class="form-group">
+                        <label for="siteDescription">网站描述</label>
+                        <textarea id="siteDescription" rows="3">创新与实践平台</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">联系邮箱</label>
+                        <input type="email" id="contactEmail" value="lab406@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="maintenanceMode">
+                            <input type="checkbox" id="maintenanceMode">
+                            维护模式
+                        </label>
+                    </div>
+                    <button class="btn-save">保存设置</button>
+                </div>
+            </section>
+
+            <!-- 报名管理 -->
+            <section id="applications" class="content-section">
+                <div class="section-header">
+                    <h2>报名管理</h2>
+                    <button class="btn-add" onclick="window.refreshApplications()">🔄 刷新</button>
+                </div>
+                <div class="applications-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>姓名</th>
+                                <th>邮箱</th>
+                                <th>留言</th>
+                                <th>报名时间</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applicationsTableBody">
+                            <!-- 报名数据由 API 动态加载 -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 作品管理 -->
+            <section id="projects" class="content-section">
+                <div class="section-header">
+                    <h2>作品管理</h2>
+                    <button class="btn-add" onclick="window.addProject()">+ 添加作品</button>
+                </div>
+                <div class="filter-bar">
+                    <label>分类筛选:</label>
+                    <select id="projectCategoryFilter" class="form-control" onchange="window.loadProjects()">
+                        <option value="">全部</option>
+                        <option value="ue">UE互动开发</option>
+                        <option value="ai">AI影视创作</option>
+                        <option value="research">人工智能研究</option>
+                    </select>
+                </div>
+                <div class="projects-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>标题</th>
+                                <th>分类</th>
+                                <th>类型</th>
+                                <th>排序</th>
+                                <th>可见</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projectsTableBody">
+                            <!-- 作品数据由 API 动态加载 -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 用户管理 -->
+            <section id="users" class="content-section">
+                <div class="section-header">
+                    <h2>用户管理</h2>
+                    <button class="btn-add" onclick="window.addUser()">+ 添加用户</button>
+                </div>
+                <div class="users-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>用户名</th>
+                                <th>邮箱</th>
+                                <th>角色</th>
+                                <th>最后登录</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- 用户数据由 API 动态加载 -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 模态框 -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">标题</h3>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div id="modalContent" class="modal-body">
+                <!-- 动态内容 -->
+            </div>
+            <div class="modal-footer">
+                <button id="modalSave" class="btn-save">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/admin.js"></script>
+</body>
+</html>

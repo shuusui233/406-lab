@@ -16,9 +16,35 @@ const mimeTypes = {
     '.ico': 'image/x-icon'
 };
 
-const server = http.createServer((req, res) => {
+// 初始化数据库
+const { initDatabase } = require('./db/database');
+const { handleApi } = require('./db/api');
+
+const server = http.createServer(async (req, res) => {
+    // CORS 处理
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    // 处理 OPTIONS 预检请求
+    if (req.method === 'OPTIONS') {
+        res.writeHead(200);
+        res.end();
+        return;
+    }
+
+    // API 请求处理
+    if (req.url.startsWith('/api/')) {
+        await handleApi(req, res);
+        return;
+    }
+
     let filePath = '.' + req.url;
-    if (filePath === './') {
+    
+    // 管理后台路由
+    if (req.url === '/admin' || req.url === '/admin.html') {
+        filePath = './admin.html';
+    } else if (filePath === './') {
         filePath = './index.html';
     }
 
@@ -41,6 +67,13 @@ const server = http.createServer((req, res) => {
     });
 });
 
-server.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}/`);
+// 启动服务器前初始化数据库
+initDatabase().then(() => {
+    server.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}/`);
+        console.log(`Admin panel: http://localhost:${PORT}/admin`);
+    });
+}).catch(err => {
+    console.error('数据库初始化失败:', err);
+    process.exit(1);
 });
