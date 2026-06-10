@@ -11,14 +11,20 @@ const mimeTypes = {
     '.json': 'application/json',
     '.png': 'image/png',
     '.jpg': 'image/jpg',
+    '.jpeg': 'image/jpeg',
     '.gif': 'image/gif',
     '.svg': 'image/svg+xml',
-    '.ico': 'image/x-icon'
+    '.ico': 'image/x-icon',
+    '.mp4': 'video/mp4',
+    '.webm': 'video/webm',
+    '.ogg': 'video/ogg',
+    '.mov': 'video/quicktime',
+    '.avi': 'video/x-msvideo'
 };
 
 // 初始化数据库
 const { initDatabase } = require('./db/database');
-const { handleApi } = require('./db/api');
+const { handleApi, handleUpload } = require('./db/api');
 
 const server = http.createServer(async (req, res) => {
     // CORS 处理
@@ -36,6 +42,35 @@ const server = http.createServer(async (req, res) => {
     // API 请求处理
     if (req.url.startsWith('/api/')) {
         await handleApi(req, res);
+        return;
+    }
+
+    // 视频上传接口
+    if (req.url === '/upload/video' && req.method === 'POST') {
+        await handleUpload(req, res);
+        return;
+    }
+
+    // 上传文件访问
+    if (req.url.startsWith('/uploads/')) {
+        const uploadPath = path.join(__dirname, req.url);
+        const extname = String(path.extname(uploadPath)).toLowerCase();
+        const contentType = mimeTypes[extname] || 'application/octet-stream';
+        
+        fs.readFile(uploadPath, (error, content) => {
+            if (error) {
+                if (error.code === 'ENOENT') {
+                    res.writeHead(404, { 'Content-Type': 'text/html' });
+                    res.end('<h1>404 Not Found</h1>', 'utf-8');
+                } else {
+                    res.writeHead(500);
+                    res.end('Server Error: ' + error.code);
+                }
+            } else {
+                res.writeHead(200, { 'Content-Type': contentType });
+                res.end(content);
+            }
+        });
         return;
     }
 

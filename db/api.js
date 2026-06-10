@@ -1,4 +1,6 @@
 const url = require('url');
+const fs = require('fs');
+const path = require('path');
 const { verifyPassword, getOne, getAll, runQuery, saveDatabase, hashPassword } = require('./database');
 
 function parseBody(req) {
@@ -8,6 +10,74 @@ function parseBody(req) {
         req.on('end', () => {
             try {
                 resolve(body ? JSON.parse(body) : {});
+            } catch (e) {
+                reject(e);
+            }
+        });
+        req.on('error', reject);
+    });
+}
+
+// 解析 multipart/form-data
+function parseMultipart(req) {
+    return new Promise((resolve, reject) => {
+        const boundary = req.headers['content-type'].split('boundary=')[1];
+        if (!boundary) {
+            reject(new Error('No boundary found'));
+            return;
+        }
+
+        let buffers = [];
+        req.on('data', chunk => buffers.push(chunk));
+        req.on('end', () => {
+            try {
+                const buffer = Buffer.concat(buffers);
+                const boundaryBuffer = Buffer.from('--' + boundary);
+                const parts = [];
+                
+                let start = 0;
+                while (true) {
+                    const boundaryIndex = buffer.indexOf(boundaryBuffer, start);
+                    if (boundaryIndex === -1) break;
+                    
+                    const nextBoundary = buffer.indexOf(boundaryBuffer, boundaryIndex + boundaryBuffer.length);
+                    if (nextBoundary === -1) break;
+                    
+                    const part = buffer.slice(boundaryIndex + boundaryBuffer.length + 2, nextBoundary - 2);
+                    parts.push(part);
+                    start = nextBoundary;
+                }
+                
+                const fields = {};
+                const files = {};
+                
+                for (const part of parts) {
+                    const headerEnd = part.indexOf('\r\n\r\n');
+                    if (headerEnd === -1) continue;
+                    
+                    const header = part.slice(0, headerEnd).toString();
+                    const content = part.slice(headerEnd + 4);
+                    
+                    const nameMatch = header.match(/name="([^"]+)"/);
+                    const filenameMatch = header.match(/filename="([^"]+)"/);
+                    
+                    if (filenameMatch && nameMatch) {
+                        const fieldName = nameMatch[1];
+                        const filename = filenameMatch[1];
+                        const contentTypeMatch = header.match(/Content-Type: ([^\r\n]+)/);
+                        const contentType = contentTypeMatch ? contentTypeMatch[1] : 'application/octet-stream';
+                        
+                        files[fieldName] = {
+                            filename,
+                            contentType,
+                            content
+                        };
+                    } else if (nameMatch) {
+                        fields[nameMatch[1]] = content.toString().replace(/\r\n$/, '');
+                    }
+                }
+                
+                resolve({ fields, files });
             } catch (e) {
                 reject(e);
             }
@@ -553,6 +623,26 @@ async function handleApi(req, res) {
         return;
     }
 
+    // 删除报名申请
+    const appDeleteMatch = pathname.match(/^\/api\/applications\/(\d+)$/);
+    if (appDeleteMatch && method === 'DELETE') {
+        const auth = await requireAuth(req);
+        if (!auth) {
+            sendJson(res, 401, { success: false, message: '未授权', errorCode: 'UNAUTHORIZED' });
+            return;
+        }
+
+        try {
+            await runQuery('DELETE FROM applications WHERE id = ?', [appDeleteMatch[1]]);
+            saveDatabase();
+            sendJson(res, 200, { success: true, message: 'ok', data: {} });
+        } catch (err) {
+            console.error('Delete application error:', err);
+            sendJson(res, 500, { success: false, message: '删除失败', errorCode: 'SERVER_ERROR' });
+        }
+        return;
+    }
+
     // 作品列表 - 公开接口
     if (pathname === '/api/projects' && method === 'GET') {
         try {
@@ -613,6 +703,42 @@ async function handleApi(req, res) {
         return;
     }
 
+    // 管理端：编辑作品
+    if (projectMatch && method === 'PUT') {
+        const auth = await requireAuth(req);
+        if (!auth) {
+            sendJson(res, 401, { success: false, message: '未授权', errorCode: 'UNAUTHORIZED' });
+            return;
+        }
+
+        try {
+            const body = await parseBody(req);
+            const { title, category, type, description, coverUrl, videoUrl, sortOrder, visible } = body;
+            
+            if (!title || !category) {
+                sendJson(res, 400, { success: false, message: '标题和分类不能为空', errorCode: 'INVALID_PARAMS' });
+                return;
+            }
+
+            if (!['ue', 'ai', 'research'].includes(category)) {
+                sendJson(res, 400, { success: false, message: '分类参数错误', errorCode: 'INVALID_PARAMS' });
+                return;
+            }
+
+            await runQuery(
+                'UPDATE projects SET title = ?, category = ?, type = ?, description = ?, coverUrl = ?, videoUrl = ?, sortOrder = ?, visible = ?, updatedAt = datetime("now") WHERE id = ?',
+                [title, category, type || '', description || '', coverUrl || '', videoUrl || '', sortOrder || 0, visible !== undefined ? visible : 1, projectMatch[1]]
+            );
+            
+            saveDatabase();
+            sendJson(res, 200, { success: true, message: 'ok', data: {} });
+        } catch (e) {
+            console.error('Update project error:', e);
+            sendJson(res, 500, { success: false, message: '更新失败', errorCode: 'SERVER_ERROR' });
+        }
+        return;
+    }
+
     // 管理端：添加作品
     if (pathname === '/api/admin/projects' && method === 'POST') {
         const auth = await requireAuth(req);
@@ -652,4 +778,59 @@ async function handleApi(req, res) {
     sendJson(res, 404, { success: false, message: '接口不存在', errorCode: 'NOT_FOUND' });
 }
 
-module.exports = { handleApi };
+// 视频上传接口
+async function handleUpload(req, res) {
+    const auth = await requireAuth(req);
+    if (!auth) {
+        sendJson(res, 401, { success: false, message: '未授权', errorCode: 'UNAUTHORIZED' });
+        return;
+    }
+
+    try {
+        const { fields, files } = await parseMultipart(req);
+        
+        if (!files.video) {
+            sendJson(res, 400, { success: false, message: '没有上传视频文件', errorCode: 'INVALID_PARAMS' });
+            return;
+        }
+
+        const video = files.video;
+        const allowedTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'video/x-msvideo'];
+        
+        if (!allowedTypes.includes(video.contentType)) {
+            sendJson(res, 400, { success: false, message: '不支持的视频格式', errorCode: 'INVALID_PARAMS' });
+            return;
+        }
+
+        // 生成唯一文件名
+        const ext = path.extname(video.filename);
+        const filename = Date.now() + '_' + Math.random().toString(36).substr(2, 9) + ext;
+        const uploadDir = path.join(__dirname, '..', 'uploads', 'videos');
+        const filepath = path.join(uploadDir, filename);
+
+        // 确保目录存在
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+
+        // 保存文件
+        fs.writeFileSync(filepath, video.content);
+
+        // 返回可访问的 URL
+        const videoUrl = `/uploads/videos/${filename}`;
+        sendJson(res, 200, { 
+            success: true, 
+            message: 'ok', 
+            data: { 
+                url: videoUrl,
+                filename: video.filename,
+                size: video.content.length
+            } 
+        });
+    } catch (e) {
+        console.error('Upload error:', e);
+        sendJson(res, 500, { success: false, message: '上传失败', errorCode: 'SERVER_ERROR' });
+    }
+}
+
+module.exports = { handleApi, handleUpload };

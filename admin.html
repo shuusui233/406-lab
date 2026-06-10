@@ -147,23 +147,12 @@
             <section id="applications" class="content-section">
                 <div class="section-header">
                     <h2>报名管理</h2>
-                    <button class="btn-add" onclick="window.refreshApplications()">🔄 刷新</button>
+                    <div class="header-actions">
+                        <button class="btn-add" onclick="window.refreshApplications()">🔄 刷新</button>
+                    </div>
                 </div>
-                <div class="applications-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>姓名</th>
-                                <th>邮箱</th>
-                                <th>留言</th>
-                                <th>报名时间</th>
-                            </tr>
-                        </thead>
-                        <tbody id="applicationsTableBody">
-                            <!-- 报名数据由 API 动态加载 -->
-                        </tbody>
-                    </table>
+                <div id="applicationsGrid" class="applications-grid">
+                    <!-- 报名卡片由 API 动态加载 -->
                 </div>
             </section>
 
@@ -171,34 +160,18 @@
             <section id="projects" class="content-section">
                 <div class="section-header">
                     <h2>作品管理</h2>
-                    <button class="btn-add" onclick="window.addProject()">+ 添加作品</button>
+                    <div class="header-actions">
+                        <select id="projectCategoryFilter" class="form-control filter-select" onchange="window.loadProjects()">
+                            <option value="">全部分类</option>
+                            <option value="ue">UE互动开发</option>
+                            <option value="ai">AI影视创作</option>
+                            <option value="research">人工智能研究</option>
+                        </select>
+                        <button class="btn-add" onclick="window.addProject()">+ 添加作品</button>
+                    </div>
                 </div>
-                <div class="filter-bar">
-                    <label>分类筛选:</label>
-                    <select id="projectCategoryFilter" class="form-control" onchange="window.loadProjects()">
-                        <option value="">全部</option>
-                        <option value="ue">UE互动开发</option>
-                        <option value="ai">AI影视创作</option>
-                        <option value="research">人工智能研究</option>
-                    </select>
-                </div>
-                <div class="projects-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>标题</th>
-                                <th>分类</th>
-                                <th>类型</th>
-                                <th>排序</th>
-                                <th>可见</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="projectsTableBody">
-                            <!-- 作品数据由 API 动态加载 -->
-                        </tbody>
-                    </table>
+                <div id="projectsGrid" class="projects-grid">
+                    <!-- 作品卡片由 API 动态加载 -->
                 </div>
             </section>
 

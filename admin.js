@@ -532,19 +532,43 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             const data = await response.json();
             
+            const grid = document.getElementById('applicationsGrid');
+            
             if (data.success && Array.isArray(data.data)) {
-                const tbody = document.getElementById('applicationsTableBody');
                 if (data.data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;">暂无报名数据</td></tr>';
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📋</div>
+                            <div class="empty-state-text">暂无报名数据</div>
+                        </div>
+                    `;
                 } else {
-                    tbody.innerHTML = data.data.map(app => `
-                        <tr>
-                            <td>${app.id}</td>
-                            <td>${escapeHtml(app.name)}</td>
-                            <td>${escapeHtml(app.email)}</td>
-                            <td>${escapeHtml(app.message)}</td>
-                            <td>${escapeHtml(app.createdAt || '')}</td>
-                        </tr>
+                    grid.innerHTML = data.data.map(app => `
+                        <div class="application-card">
+                            <div class="application-card-header">
+                                <div class="application-avatar">${escapeHtml(app.name.charAt(0).toUpperCase())}</div>
+                                <div class="application-header-info">
+                                    <div class="application-name">${escapeHtml(app.name)}</div>
+                                    <div class="application-email">${escapeHtml(app.email)}</div>
+                                </div>
+                                <div class="application-id">#${app.id}</div>
+                            </div>
+                            <div class="application-card-body">
+                                <div class="application-message">
+                                    <div class="application-message-label">💬 报名留言</div>
+                                    <div class="application-message-content">${escapeHtml(app.message)}</div>
+                                </div>
+                            </div>
+                            <div class="application-card-footer">
+                                <div class="application-date">
+                                    📅 ${escapeHtml(app.createdAt || '')}
+                                </div>
+                                <div class="application-actions">
+                                    <button class="btn-view" onclick="window.viewApplication(${app.id})">查看详情</button>
+                                    <button class="btn-delete" onclick="window.deleteApplication(${app.id})">删除</button>
+                                </div>
+                            </div>
+                        </div>
                     `).join('');
                 }
             }
@@ -552,6 +576,64 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('加载报名列表失败:', err);
         }
     }
+
+    // 查看报名详情
+    window.viewApplication = function(id) {
+        const applications = document.querySelectorAll('.application-card');
+        const card = applications[id - 1];
+        if (card) {
+            const name = card.querySelector('.application-name').textContent;
+            const email = card.querySelector('.application-email').textContent;
+            const message = card.querySelector('.application-message-content').textContent;
+            const date = card.querySelector('.application-date').textContent.replace('📅 ', '');
+            
+            showModal('报名详情', `
+                <div style="padding: 10px 0;">
+                    <div class="form-group">
+                        <label>姓名:</label>
+                        <div style="padding: 10px; background: #f5f5f7; border-radius: 8px;">${escapeHtml(name)}</div>
+                    </div>
+                    <div class="form-group">
+                        <label>邮箱:</label>
+                        <div style="padding: 10px; background: #f5f5f7; border-radius: 8px;">${escapeHtml(email)}</div>
+                    </div>
+                    <div class="form-group">
+                        <label>报名时间:</label>
+                        <div style="padding: 10px; background: #f5f5f7; border-radius: 8px;">${escapeHtml(date)}</div>
+                    </div>
+                    <div class="form-group">
+                        <label>报名留言:</label>
+                        <div style="padding: 10px; background: #f5f5f7; border-radius: 8px; white-space: pre-wrap;">${escapeHtml(message)}</div>
+                    </div>
+                </div>
+            `, function() {
+                modal.style.display = 'none';
+            });
+        }
+    };
+
+    // 删除报名
+    window.deleteApplication = async function(id) {
+        if (!confirm('确定要删除这条报名记录吗？')) return;
+        
+        try {
+            const response = await fetch(`/api/applications/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': getAuthHeader() }
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                alert('报名记录已删除');
+                loadApplications();
+            } else {
+                alert('删除失败: ' + (result.message || '未知错误'));
+            }
+        } catch (err) {
+            console.error('删除报名失败:', err);
+            alert('删除失败');
+        }
+    };
 
     // 刷新报名列表
     window.refreshApplications = function() {
@@ -566,24 +648,39 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(url);
             const data = await response.json();
             
+            const grid = document.getElementById('projectsGrid');
+            const categoryMap = { ue: 'UE互动开发', ai: 'AI影视创作', research: '人工智能研究' };
+            const categoryColor = { ue: '#667eea', ai: '#e74c3c', research: '#27ae60' };
+            
             if (data.success && Array.isArray(data.data)) {
-                const tbody = document.getElementById('projectsTableBody');
                 if (data.data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">暂无作品数据</td></tr>';
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🎨</div>
+                            <div class="empty-state-text">暂无作品数据</div>
+                        </div>
+                    `;
                 } else {
-                    const categoryMap = { ue: 'UE互动开发', ai: 'AI影视创作', research: '人工智能研究' };
-                    tbody.innerHTML = data.data.map(project => `
-                        <tr>
-                            <td>${project.id}</td>
-                            <td>${escapeHtml(project.title)}</td>
-                            <td>${categoryMap[project.category] || project.category}</td>
-                            <td>${escapeHtml(project.type || '-')}</td>
-                            <td>${project.sortOrder}</td>
-                            <td>${project.visible == 1 ? '✓' : '✗'}</td>
-                            <td>
-                                <button class="btn-delete" onclick="window.deleteProject(${project.id})">删除</button>
-                            </td>
-                        </tr>
+                    grid.innerHTML = data.data.map(project => `
+                        <div class="project-card">
+                            <div class="project-card-header" style="${project.coverUrl ? '' : `background: linear-gradient(135deg, ${categoryColor[project.category] || '#667eea'} 0%, ${categoryColor[project.category] || '#764ba2'} 100%)`}">
+                                ${project.coverUrl ? `<img src="${escapeHtml(project.coverUrl)}" alt="${escapeHtml(project.title)}">` : `<span style="font-size: 48px;">🎬</span>`}
+                                <span class="category-badge">${categoryMap[project.category] || project.category}</span>
+                                <span class="visible-badge">${project.visible == 1 ? '👁️' : '🚫'}</span>
+                            </div>
+                            <div class="project-card-body">
+                                <h3 class="project-card-title">${escapeHtml(project.title)}</h3>
+                                ${project.type ? `<span class="project-card-type">${escapeHtml(project.type)}</span>` : ''}
+                                ${project.description ? `<p class="project-card-desc">${escapeHtml(project.description)}</p>` : ''}
+                                <div class="project-card-footer">
+                                    <span class="project-card-meta">排序: ${project.sortOrder}</span>
+                                    <div class="project-card-actions">
+                                        <button class="btn-edit" onclick="window.editProject(${project.id})">编辑</button>
+                                        <button class="btn-delete" onclick="window.deleteProject(${project.id})">删除</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     `).join('');
                 }
             }
@@ -596,7 +693,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window.deleteProject = async function(id) {
         if (!confirm('确定要删除这个作品吗？')) return;
         
-        // 由于公开接口只提供 GET，这里通过后端管理接口
         try {
             const response = await fetch(`/api/projects/${id}`, {
                 method: 'DELETE',
@@ -613,6 +709,152 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (err) {
             console.error('删除作品失败:', err);
             alert('删除失败');
+        }
+    };
+
+    // 编辑作品
+    window.editProject = async function(id) {
+        try {
+            // 获取作品数据
+            const response = await fetch(`/api/projects/${id}`);
+            const result = await response.json();
+            
+            if (!result.success || !result.data) {
+                alert('获取作品数据失败');
+                return;
+            }
+            
+            const project = result.data;
+            
+            showModal('编辑作品', `
+                <input type="hidden" id="editProjectId" value="${project.id}">
+                <div class="form-group">
+                    <label>标题:</label>
+                    <input type="text" id="editProjectTitle" class="form-control" value="${escapeHtml(project.title)}">
+                </div>
+                <div class="form-group">
+                    <label>分类:</label>
+                    <select id="editProjectCategory" class="form-control">
+                        <option value="ue" ${project.category === 'ue' ? 'selected' : ''}>UE互动开发</option>
+                        <option value="ai" ${project.category === 'ai' ? 'selected' : ''}>AI影视创作</option>
+                        <option value="research" ${project.category === 'research' ? 'selected' : ''}>人工智能研究</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>类型:</label>
+                    <input type="text" id="editProjectType" class="form-control" value="${escapeHtml(project.type || '')}">
+                </div>
+                <div class="form-group">
+                    <label>描述:</label>
+                    <textarea id="editProjectDescription" class="form-control" rows="3">${escapeHtml(project.description || '')}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>封面URL:</label>
+                    <input type="text" id="editProjectCover" class="form-control" value="${escapeHtml(project.coverUrl || '')}">
+                </div>
+                <div class="form-group">
+                    <label>视频文件:</label>
+                    <input type="file" id="editProjectVideoFile" class="form-control" accept="video/*" onchange="window.handleEditVideoSelect(this)">
+                    <small style="color: #666; margin-top: 5px; display: block;">选择新视频将替换原有视频</small>
+                </div>
+                <div class="form-group">
+                    <label>当前视频URL:</label>
+                    <input type="text" id="editProjectVideo" class="form-control" value="${escapeHtml(project.videoUrl || '')}">
+                </div>
+                <div id="editVideoPreview" style="display: none; margin-top: 10px;">
+                    <label>新视频预览:</label>
+                    <video id="editPreviewVideo" controls style="max-width: 100%; max-height: 200px; margin-top: 5px;"></video>
+                </div>
+                ${project.videoUrl ? `<div style="margin-top: 10px;"><label>当前视频预览:</label><video src="${project.videoUrl}" controls style="max-width: 100%; max-height: 150px; margin-top: 5px;"></video></div>` : ''}
+                <div class="form-group">
+                    <label>排序:</label>
+                    <input type="number" id="editProjectSort" class="form-control" value="${project.sortOrder}">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="editProjectVisible" ${project.visible == 1 ? 'checked' : ''}>
+                        是否可见
+                    </label>
+                </div>
+            `, async function() {
+                const videoFile = document.getElementById('editProjectVideoFile').files[0];
+                let videoUrl = document.getElementById('editProjectVideo').value;
+                
+                // 如果选择了新视频文件，先上传
+                if (videoFile) {
+                    try {
+                        const formData = new FormData();
+                        formData.append('video', videoFile);
+                        
+                        const uploadResponse = await fetch('/upload/video', {
+                            method: 'POST',
+                            headers: { 'Authorization': getAuthHeader() },
+                            body: formData
+                        });
+                        const uploadResult = await uploadResponse.json();
+                        
+                        if (uploadResult.success) {
+                            videoUrl = uploadResult.data.url;
+                        } else {
+                            alert('视频上传失败: ' + (uploadResult.message || '未知错误'));
+                            return;
+                        }
+                    } catch (err) {
+                        alert('视频上传失败');
+                        return;
+                    }
+                }
+                
+                const updateData = {
+                    title: document.getElementById('editProjectTitle').value,
+                    category: document.getElementById('editProjectCategory').value,
+                    type: document.getElementById('editProjectType').value,
+                    description: document.getElementById('editProjectDescription').value,
+                    coverUrl: document.getElementById('editProjectCover').value,
+                    videoUrl: videoUrl,
+                    sortOrder: parseInt(document.getElementById('editProjectSort').value) || 0,
+                    visible: document.getElementById('editProjectVisible').checked ? 1 : 0
+                };
+                
+                try {
+                    const response = await fetch(`/api/projects/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': getAuthHeader()
+                        },
+                        body: JSON.stringify(updateData)
+                    });
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        alert('作品更新成功');
+                        window.loadProjects();
+                    } else {
+                        alert('更新失败: ' + (result.message || '未知错误'));
+                    }
+                } catch (err) {
+                    alert('更新失败');
+                }
+            });
+        } catch (err) {
+            console.error('编辑作品失败:', err);
+            alert('获取作品数据失败');
+        }
+    };
+
+    // 编辑视频选择预览
+    window.handleEditVideoSelect = function(input) {
+        const file = input.files[0];
+        const previewDiv = document.getElementById('editVideoPreview');
+        const previewVideo = document.getElementById('editPreviewVideo');
+        
+        if (file) {
+            const url = URL.createObjectURL(file);
+            previewVideo.src = url;
+            previewDiv.style.display = 'block';
+        } else {
+            previewDiv.style.display = 'none';
         }
     };
 
@@ -644,8 +886,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 <input type="text" id="addProjectCover" class="form-control" placeholder="封面图片URL">
             </div>
             <div class="form-group">
-                <label>视频URL:</label>
-                <input type="text" id="addProjectVideo" class="form-control" placeholder="视频文件URL">
+                <label>视频文件:</label>
+                <input type="file" id="addProjectVideoFile" class="form-control" accept="video/*" onchange="window.handleVideoSelect(this)">
+                <small style="color: #666; margin-top: 5px; display: block;">支持 MP4, WebM, MOV, AVI 格式</small>
+            </div>
+            <div class="form-group">
+                <label>或输入视频URL:</label>
+                <input type="text" id="addProjectVideo" class="form-control" placeholder="视频文件URL（可选）">
+            </div>
+            <div id="videoPreview" style="display: none; margin-top: 10px;">
+                <label>视频预览:</label>
+                <video id="previewVideo" controls style="max-width: 100%; max-height: 200px; margin-top: 5px;"></video>
             </div>
             <div class="form-group">
                 <label>排序:</label>
@@ -658,13 +909,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 </label>
             </div>
         `, async function() {
+            const videoFile = document.getElementById('addProjectVideoFile').files[0];
+            let videoUrl = document.getElementById('addProjectVideo').value;
+            
+            // 如果选择了视频文件，先上传
+            if (videoFile) {
+                try {
+                    const formData = new FormData();
+                    formData.append('video', videoFile);
+                    
+                    const uploadResponse = await fetch('/upload/video', {
+                        method: 'POST',
+                        headers: { 'Authorization': getAuthHeader() },
+                        body: formData
+                    });
+                    const uploadResult = await uploadResponse.json();
+                    
+                    if (uploadResult.success) {
+                        videoUrl = uploadResult.data.url;
+                    } else {
+                        alert('视频上传失败: ' + (uploadResult.message || '未知错误'));
+                        return;
+                    }
+                } catch (err) {
+                    alert('视频上传失败');
+                    return;
+                }
+            }
+            
             const newProject = {
                 title: document.getElementById('addProjectTitle').value,
                 category: document.getElementById('addProjectCategory').value,
                 type: document.getElementById('addProjectType').value,
                 description: document.getElementById('addProjectDescription').value,
                 coverUrl: document.getElementById('addProjectCover').value,
-                videoUrl: document.getElementById('addProjectVideo').value,
+                videoUrl: videoUrl,
                 sortOrder: parseInt(document.getElementById('addProjectSort').value) || 0,
                 visible: document.getElementById('addProjectVisible').checked ? 1 : 0
             };
@@ -690,5 +969,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('添加失败');
             }
         });
+    };
+
+    // 视频选择预览
+    window.handleVideoSelect = function(input) {
+        const file = input.files[0];
+        const previewDiv = document.getElementById('videoPreview');
+        const previewVideo = document.getElementById('previewVideo');
+        
+        if (file) {
+            const url = URL.createObjectURL(file);
+            previewVideo.src = url;
+            previewDiv.style.display = 'block';
+            
+            // 清空 URL 输入框
+            document.getElementById('addProjectVideo').value = '';
+        } else {
+            previewDiv.style.display = 'none';
+        }
     };
 });

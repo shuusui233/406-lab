@@ -955,21 +955,8 @@
                 </div>
                 <div class="content-block">
                     <h3 class="block-title">项目作品</h3>
-                    <div class="projects-grid">
-                        <div class="project-card">
-                            <div class="project-image">校园数字孪生</div>
-                            <div class="project-info">
-                                <h3>校园数字孪生可视化平台</h3>
-                                <p>基于 UE5 构建教学楼、实验室与设备状态联动的数字孪生演示系统，用于空间展示与场景讲解。</p>
-                            </div>
-                        </div>
-                        <div class="project-card">
-                            <div class="project-image">VR 交互体验</div>
-                            <div class="project-info">
-                                <h3>沉浸式 VR 互动体验</h3>
-                                <p>围绕校史馆与实训课程设计多人交互流程，完成场景搭建、UI 交互和设备适配。</p>
-                            </div>
-                        </div>
+                    <div class="projects-grid" id="ue-projects">
+                        <!-- 项目数据从数据库加载 -->
                     </div>
                 </div>
                 <div class="content-block">
@@ -999,26 +986,8 @@
                 </div>
                 <div class="content-block">
                     <h3 class="block-title">项目作品</h3>
-                    <div class="projects-grid">
-                        <div class="project-card project-card-video-preview">
-                            <div class="project-image">
-                                <video muted playsinline preload="metadata" controls>
-                                    <source src="video/归墟令_第一组.mp4" type="video/mp4">
-                                    您的浏览器不支持视频播放。
-                                </video>
-                            </div>
-                            <div class="project-info">
-                                <h3>归墟令</h3>
-                                <p>AI影视创作项目作品展示，卡片内自动静音预览视频内容。</p>
-                            </div>
-                        </div>
-                        <div class="project-card">
-                            <div class="project-image">生成式短剧</div>
-                            <div class="project-info">
-                                <h3>校园主题 AI 短剧实验</h3>
-                                <p>围绕校园故事设计脚本与分镜，使用 AIGC 进行角色生成、镜头拼接与后期配音。</p>
-                            </div>
-                        </div>
+                    <div class="projects-grid" id="ai-projects">
+                        <!-- 项目数据从数据库加载 -->
                     </div>
                 </div>
                 <div class="content-block">
@@ -1048,21 +1017,8 @@
                 </div>
                 <div class="content-block">
                     <h3 class="block-title">项目作品</h3>
-                    <div class="projects-grid">
-                        <div class="project-card">
-                            <div class="project-image">竞赛方案</div>
-                            <div class="project-info">
-                                <h3>智能识别竞赛项目</h3>
-                                <p>围绕图像识别与分类任务完成数据清洗、模型训练和结果分析，服务竞赛备赛与答辩展示。</p>
-                            </div>
-                        </div>
-                        <div class="project-card">
-                            <div class="project-image">场景落地</div>
-                            <div class="project-info">
-                                <h3>校园场景 AI 应用落地</h3>
-                                <p>结合问答助手、视觉识别与业务流程优化，探索人工智能在校园服务中的实际应用。</p>
-                            </div>
-                        </div>
+                    <div class="projects-grid" id="research-projects">
+                        <!-- 项目数据从数据库加载 -->
                     </div>
                 </div>
                 <div class="content-block">
@@ -1494,8 +1450,99 @@
         // 页面加载完成后执行
         document.addEventListener('DOMContentLoaded', async function() {
             await loadSiteSettings();
+            await loadProjects();
             trackVisit();
         });
+
+        // 加载项目作品
+        async function loadProjects() {
+            try {
+                // 加载UE项目
+                const ueResponse = await fetch('/api/projects?category=ue');
+                const ueData = await ueResponse.json();
+                renderProjects('ue-projects', ueData.data || []);
+
+                // 加载AI项目
+                const aiResponse = await fetch('/api/projects?category=ai');
+                const aiData = await aiResponse.json();
+                renderProjects('ai-projects', aiData.data || []);
+
+                // 加载Research项目
+                const researchResponse = await fetch('/api/projects?category=research');
+                const researchData = await researchResponse.json();
+                renderProjects('research-projects', researchData.data || []);
+            } catch (error) {
+                console.log('加载项目失败:', error);
+            }
+        }
+
+        // 渲染项目卡片
+        function renderProjects(containerId, projects) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            if (projects.length === 0) {
+                container.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 40px;">暂无项目作品</p>';
+                return;
+            }
+
+            container.innerHTML = projects.map(project => {
+                // 如果有视频，渲染视频预览卡片
+                if (project.videoUrl) {
+                    return `
+                        <div class="project-card project-card-video-preview">
+                            <div class="project-image">
+                                <video muted playsinline preload="metadata" controls>
+                                    <source src="${project.videoUrl}" type="video/mp4">
+                                    您的浏览器不支持视频播放。
+                                </video>
+                            </div>
+                            <div class="project-info">
+                                <h3>${escapeHtml(project.title)}</h3>
+                                ${project.type ? `<p style="color: var(--accent-color); font-size: 0.85rem; margin-bottom: 0.5rem;">${escapeHtml(project.type)}</p>` : ''}
+                                ${project.description ? `<p>${escapeHtml(project.description)}</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 如果有封面图
+                if (project.coverUrl) {
+                    return `
+                        <div class="project-card">
+                            <div class="project-image">
+                                <img src="${project.coverUrl}" alt="${escapeHtml(project.title)}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div class="project-info">
+                                <h3>${escapeHtml(project.title)}</h3>
+                                ${project.type ? `<p style="color: var(--accent-color); font-size: 0.85rem; margin-bottom: 0.5rem;">${escapeHtml(project.type)}</p>` : ''}
+                                ${project.description ? `<p>${escapeHtml(project.description)}</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 默认显示
+                return `
+                    <div class="project-card">
+                        <div class="project-image">${escapeHtml(project.title)}</div>
+                        <div class="project-info">
+                            <h3>${escapeHtml(project.title)}</h3>
+                            ${project.type ? `<p style="color: var(--accent-color); font-size: 0.85rem; margin-bottom: 0.5rem;">${escapeHtml(project.type)}</p>` : ''}
+                            ${project.description ? `<p>${escapeHtml(project.description)}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // HTML转义防止XSS
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
     </script>
 </body>
 </html>
