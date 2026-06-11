@@ -18,6 +18,35 @@ const projects = ref([]);
 const loading = ref(false);
 const errorMessage = ref('');
 
+const categoryLabels = {
+  ue: 'UE互动开发',
+  ai: 'AI影视创作',
+  research: '人工智能研究'
+};
+
+const typeLabels = {
+  interactive: '交互体验',
+  vr: 'VR体验',
+  simulation: '虚拟仿真',
+  video: '视频作品',
+  'short-film': '短片创作',
+  promo: '宣传内容',
+  trailer: '预告片',
+  great: '创意实验',
+  competition: '竞赛项目',
+  application: '应用落地',
+  nlp: '自然语言处理',
+  'data-analysis': '数据分析'
+};
+
+function getCategoryLabel(category) {
+  return categoryLabels[category] || category || '未分类';
+}
+
+function getTypeLabel(type) {
+  return typeLabels[type] || type || '项目作品';
+}
+
 function applyBodyClass() {
   if (!page.value) {
     return;
@@ -102,14 +131,29 @@ onBeforeUnmount(() => {
     </header>
 
     <section class="works-section">
-      <span class="section-label">{{ page.label }}</span>
-      <h2>{{ page.title }}</h2>
-      <p class="section-desc">{{ page.description }}</p>
+      <nav class="detail-breadcrumb works-breadcrumb" aria-label="页面路径">
+        <RouterLink to="/">首页</RouterLink>
+        <span>/</span>
+        <span>{{ page.title }}</span>
+      </nav>
+
+      <div class="works-hero">
+        <div class="works-hero-copy">
+          <span class="section-label">{{ page.label }}</span>
+          <h2>{{ page.title }}</h2>
+          <p class="section-desc">{{ page.description }}</p>
+        </div>
+        <div class="works-hero-panel">
+          <strong>{{ projects.length }}</strong>
+          <span>当前展示作品</span>
+          <small>按方向分类整理，持续更新中</small>
+        </div>
+      </div>
 
       <div class="preview-section">
         <div class="preview-header">
           <h3>作品预览</h3>
-          <p>当前分类数据由接口 `/api/projects` 按 `category` 参数返回。</p>
+          <p>从作品卡片进入详情页，可继续查看项目定位、亮点与适用场景。</p>
         </div>
 
         <div v-if="loading" class="status-panel">
@@ -138,16 +182,22 @@ onBeforeUnmount(() => {
             }"
           >
             <div class="preview-placeholder">
-              {{ project.coverUrl ? '封面资源待接入' : project.title }}
+              <span class="preview-placeholder-badge">{{ page.title }}</span>
+              <span class="preview-placeholder-title">
+                {{ project.coverUrl ? '封面资源待接入' : project.title }}
+              </span>
             </div>
             <div class="preview-card-body">
               <div class="project-meta">
-                <span class="project-chip">{{ project.category }}</span>
-                <span class="project-chip">{{ project.type }}</span>
+                <span class="project-chip">{{ getCategoryLabel(project.category) }}</span>
+                <span class="project-chip">{{ getTypeLabel(project.type) }}</span>
               </div>
               <h4>{{ project.title }}</h4>
               <p>{{ project.description }}</p>
-              <span class="project-detail-link">查看详情</span>
+              <div class="project-card-footer project-preview-footer">
+                <span>查看项目详情</span>
+                <span>{{ getTypeLabel(project.type) }}</span>
+              </div>
             </div>
           </RouterLink>
         </div>
