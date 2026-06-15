@@ -51,24 +51,6 @@
     "createdAt": "2026-06-02T15:00:00.000Z",
     "updatedAt": "2026-06-02T15:00:00.000Z"
   },
-   {
-    "id": "ue-training-simulator",
-    "title": "虚拟实训操作模拟器",
-    "category": "ue",
-    "type": "simulation",
-    "description": "占位作品：后续可补充设备操作、流程演示等内容，当前先作为作品占位展示。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 4,
-    "visible": true,
-    "createdAt": "2026-06-02T15:00:00.000Z",
-    "updatedAt": "2026-06-02T15:00:00.000Z"
-  },
-
-
-
-
-  
   {
     "id": "ai-return-to-ruins",
     "title": "归墟令",
@@ -134,11 +116,6 @@
     "createdAt": "2026-06-04T15:00:00.000Z",
     "updatedAt": "2026-06-04T15:00:00.000Z"
   },
-
-
-
-
-
   {
     "id": "research-vision-competition",
     "title": "智能识别竞赛项目",
@@ -190,5 +167,18 @@
     "visible": true,
     "createdAt": "2026-06-06T15:00:00.000Z",
     "updatedAt": "2026-06-06T15:00:00.000Z"
+  },
+  {
+    "id": "1781057377739",
+    "title": "末日列车",
+    "category": "ai",
+    "type": "AI动漫",
+    "description": "",
+    "coverUrl": "/uploads/1781057371347___2026610_193034.mp4",
+    "videoUrl": "/uploads/1781057374034___2026610_193034.mp4",
+    "sortOrder": 0,
+    "visible": true,
+    "createdAt": "2026-06-10T02:09:37.739Z",
+    "updatedAt": "2026-06-10T02:09:37.739Z"
   }
 ]

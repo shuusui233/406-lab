@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": 1781248309189,
+    "name": "张三",
+    "email": "zhangsan@example.com",
+    "message": "我想报名AI方向，希望能参与项目开发",
+    "createdAt": "2026-06-12T07:11:49.189Z"
+  }
+]

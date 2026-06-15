@@ -171,11 +171,17 @@ onBeforeUnmount(() => {
 
         <div class="detail-grid">
           <div class="detail-preview">
-            <div v-if="project.videoUrl" class="detail-media-placeholder">
-              视频资源待接入：{{ project.videoUrl }}
+            <div v-if="project.videoUrl" class="detail-media-container">
+              <video 
+                :src="project.videoUrl" 
+                controls 
+                class="detail-video-player"
+              >
+                您的浏览器不支持视频播放
+              </video>
             </div>
-            <div v-else-if="project.coverUrl" class="detail-media-placeholder">
-              封面资源待接入：{{ project.coverUrl }}
+            <div v-else-if="project.coverUrl" class="detail-media-container">
+              <img :src="project.coverUrl" :alt="project.title" class="detail-cover-image" />
             </div>
             <div v-else class="detail-media-placeholder">
               暂无封面或视频资源
@@ -210,3 +216,36 @@ onBeforeUnmount(() => {
     </section>
   </main>
 </template>
+
+<style scoped>
+.detail-media-container {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.detail-video-player {
+  width: 100%;
+  max-height: 600px;
+  display: block;
+  background: #000;
+}
+
+.detail-cover-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+}
+
+.detail-media-placeholder {
+  width: 100%;
+  padding: 60px 20px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+</style>

@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import ProjectDetailView from '../views/ProjectDetailView.vue';
 import WorksView from '../views/WorksView.vue';
+import AdminView from '../views/AdminView.vue';
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -22,6 +23,11 @@ const router = createRouter({
       name: 'project-detail',
       component: ProjectDetailView,
       props: true
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: AdminView
     },
     {
       path: '/:pathMatch(.*)*',
