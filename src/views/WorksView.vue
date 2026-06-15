@@ -144,8 +144,8 @@ onBeforeUnmount(() => {
           <p class="section-desc">{{ page.description }}</p>
         </div>
         <div class="works-hero-panel">
+          <span>作品数量</span>
           <strong>{{ projects.length }}</strong>
-          <span>当前展示作品</span>
           <small>按方向分类整理，持续更新中</small>
         </div>
       </div>
