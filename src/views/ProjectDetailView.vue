@@ -110,10 +110,22 @@ const projectMetaItems = computed(() => {
   return [
     { label: '所属方向', value: categoryLabel.value || '未分类' },
     { label: '项目类型', value: typeLabel.value || '项目作品' },
-    { label: '展示排序', value: `第 ${project.value.sortOrder} 位` },
+    { label: '媒体状态', value: getMediaStatus(project.value) },
     { label: '最近更新', value: formatDate(project.value.updatedAt) }
   ];
 });
+
+function getMediaStatus(item) {
+  if (item?.videoUrl) {
+    return '已接入视频';
+  }
+
+  if (item?.coverUrl) {
+    return '仅封面展示';
+  }
+
+  return '待补充素材';
+}
 
 function formatDate(value) {
   if (!value) {
@@ -269,37 +281,39 @@ onBeforeUnmount(() => {
           <span class="project-chip">作品详情页</span>
         </div>
 
-        <div class="detail-grid">
-          <div class="detail-main">
-            <div class="detail-preview">
-              <div v-if="project.videoUrl" class="detail-media-placeholder">
-                视频资源待接入：{{ project.videoUrl }}
-              </div>
-              <div v-else-if="project.coverUrl" class="detail-media-placeholder">
-                封面资源待接入：{{ project.coverUrl }}
-              </div>
-              <div v-else class="detail-media-placeholder">
-                暂无封面或视频资源
-              </div>
-            </div>
-
-            <div class="detail-card">
-              <h3>项目概览</h3>
-              <p class="detail-paragraph">{{ projectSummary }}</p>
-              <p v-if="detailContent?.summary" class="detail-paragraph is-subtle">
-                {{ detailContent.summary }}
-              </p>
-            </div>
-
-            <div v-if="detailContent?.highlights?.length" class="detail-card">
-              <h3>项目亮点</h3>
-              <ul class="detail-list detail-highlight-list">
-                <li v-for="item in detailContent.highlights" :key="item">{{ item }}</li>
-              </ul>
+        <div class="detail-stage">
+          <div class="detail-preview">
+            <video
+              v-if="project.videoUrl"
+              class="detail-video"
+              :src="project.videoUrl"
+              controls
+              playsinline
+              preload="metadata"
+            >
+              您的浏览器暂不支持视频播放。
+            </video>
+            <img
+              v-else-if="project.coverUrl"
+              class="detail-cover"
+              :src="project.coverUrl"
+              :alt="`${project.title}封面`"
+            />
+            <div v-else class="detail-media-placeholder">
+              <strong class="detail-media-title">{{ project.title }}</strong>
+              <span class="detail-media-note">当前还没有接入视频或封面素材</span>
             </div>
           </div>
 
-          <div class="detail-info">
+          <div class="detail-info-grid">
+            <div class="detail-card detail-card-wide">
+              <h3>项目概览</h3>
+              <p class="detail-paragraph">{{ projectSummary }}</p>
+              <ul v-if="detailContent?.highlights?.length" class="detail-list detail-highlight-list">
+                <li v-for="item in detailContent.highlights" :key="item">{{ item }}</li>
+              </ul>
+            </div>
+
             <div class="detail-card">
               <h3>项目档案</h3>
               <ul class="detail-list">
@@ -307,24 +321,6 @@ onBeforeUnmount(() => {
                   <strong>{{ item.label }}：</strong>{{ item.value }}
                 </li>
               </ul>
-            </div>
-
-            <div v-if="detailContent?.scene" class="detail-card">
-              <h3>适用场景</h3>
-              <p class="detail-paragraph">{{ detailContent.scene }}</p>
-            </div>
-
-            <div class="detail-card">
-              <h3>资源状态</h3>
-              <ul class="detail-list">
-                <li><strong>封面素材：</strong>{{ project.coverUrl || '暂未接入' }}</li>
-                <li><strong>视频素材：</strong>{{ project.videoUrl || '暂未接入' }}</li>
-              </ul>
-            </div>
-
-            <div v-if="detailContent?.nextStep" class="detail-card">
-              <h3>内容延展建议</h3>
-              <p class="detail-paragraph">{{ detailContent.nextStep }}</p>
             </div>
           </div>
         </div>

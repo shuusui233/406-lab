@@ -422,8 +422,8 @@ onBeforeUnmount(() => {
       class="section hero"
     >
       <div class="content-wrapper fade-in" :class="{ visible: animatedSections[0] }">
-        <h1>欢迎来到406实训室</h1>
-        <p>创新与实践相遇，梦想在此起航</p>
+        <h1 style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold', 'Microsoft YaHei', sans-serif;">欢迎来到406实训室</h1>
+        <p style="font-family: 'AlimamaFangYuanTiVF-Thin', 'Microsoft YaHei', sans-serif;">创新与实践相遇，梦想在此起航</p>
         <button class="btn btn-primary" type="button" @click="jumpToSection('recruit-section')">
           招新报名
         </button>
@@ -440,7 +440,7 @@ onBeforeUnmount(() => {
         <div class="about-content">
           <div class="about-text">
             <span class="about-kicker">ABOUT 406 LAB</span>
-            <h2>让技术、创意与实践在同一个空间里发生</h2>
+            <h2 style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold', 'Microsoft YaHei', sans-serif;">让技术、创意与实践在同一个空间里发生</h2>
             <p class="about-lead">
               406实训室是一个融合
               <strong>硬核开发</strong>
@@ -452,8 +452,8 @@ onBeforeUnmount(() => {
             </p>
             <div class="about-points">
               <div v-for="point in aboutPoints" :key="point.title" class="about-point">
-                <strong>{{ point.title }}</strong>
-                <span>{{ point.description }}</span>
+                <strong style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold', 'Microsoft YaHei', sans-serif;font-size: 1.3rem;">{{ point.title }}</strong>
+                <span style="font-size: 1.1rem;">{{ point.description }}</span>
               </div>
             </div>
             <p class="about-note">
@@ -471,8 +471,8 @@ onBeforeUnmount(() => {
             >
               <span class="feature-tag">{{ card.tag }}</span>
               <span class="feature-icon" aria-hidden="true">{{ card.icon }}</span>
-              <h3>{{ card.title }}</h3>
-              <p>{{ card.summary }}</p>
+              <h3 style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold', 'Microsoft YaHei', sans-serif;">{{ card.title }}</h3>
+              <p style="font-size: 1rem;">{{ card.summary }}</p>
             </button>
           </div>
         </div>
