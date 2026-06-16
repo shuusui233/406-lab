@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { getProjectDetail } from '../api/projects';
 import { worksPages } from '../data/site';
 
@@ -12,7 +12,6 @@ const props = defineProps({
 });
 
 const route = useRoute();
-const router = useRouter();
 const project = ref(null);
 const loading = ref(false);
 const errorMessage = ref('');
@@ -161,20 +160,6 @@ function applyBodyClass() {
   document.body.classList.add('page-works', page.value.accentClass);
 }
 
-function handleGoBack() {
-  if (window.history.length > 1) {
-    router.back();
-    return;
-  }
-
-  if (project.value?.category) {
-    router.push(`/works/${project.value.category}`);
-    return;
-  }
-
-  router.push('/');
-}
-
 async function loadProjectDetail() {
   loading.value = true;
   errorMessage.value = '';
@@ -223,9 +208,6 @@ onBeforeUnmount(() => {
         <p>{{ page ? `${page.title}作品详情` : '作品详情' }}</p>
       </div>
       <div class="header-actions">
-        <button class="btn btn-secondary" type="button" @click="handleGoBack">
-          返回上一页
-        </button>
         <RouterLink
           v-if="homeTargetSection"
           class="btn btn-primary"

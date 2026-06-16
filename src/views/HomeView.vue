@@ -436,7 +436,7 @@ onBeforeUnmount(() => {
       class="section about"
     >
       <div class="content-wrapper fade-in" :class="{ visible: animatedSections[1] }">
-        <h2 class="section-title">关于我们</h2>
+        <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">关于我们</h2>
         <div class="about-content">
           <div class="about-text">
             <span class="about-kicker">ABOUT 406 LAB</span>
@@ -486,19 +486,20 @@ onBeforeUnmount(() => {
       :ref="(element) => setSectionRef(element, offset + 2)"
       class="section direction-section"
       :class="direction.accentClass"
+      
     >
       <div
         class="content-wrapper fade-in"
         :class="{ visible: animatedSections[offset + 2] }"
       >
         <div class="direction-header">
-          <span class="direction-label">{{ direction.label }}</span>
-          <h2 class="section-title">{{ direction.title }}</h2>
+          <span class="direction-label" style="font-family: 'AlimamaFangYuanTiVF-Thin'">{{ direction.label }}</span>
+          <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">{{ direction.title }}</h2>
           <p class="direction-desc">{{ direction.description }}</p>
         </div>
 
         <div class="content-block">
-          <h3 class="block-title">项目作品</h3>
+          <h3 class="block-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">项目作品</h3>
           <div class="projects-grid">
             <article
               v-for="project in direction.projects"
@@ -520,7 +521,7 @@ onBeforeUnmount(() => {
               </div>
             </article>
           </div>
-          <div class="projects-actions">
+          <div class="projects-actions" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">
             <RouterLink class="btn btn-outline-light" :to="`/works/${direction.key}`">
               更多作品
             </RouterLink>
@@ -528,7 +529,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="content-block">
-          <h3 class="block-title">教师团队</h3>
+          <h3 class="block-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">教师团队</h3>
           <div class="mentor-grid">
             <article
               v-for="mentor in direction.mentors"
@@ -552,16 +553,16 @@ onBeforeUnmount(() => {
       class="section recruit"
     >
       <div class="content-wrapper fade-in" :class="{ visible: animatedSections[5] }">
-        <h2 class="section-title">招新信息</h2>
+        <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">招新信息</h2>
         <div class="recruit-content">
           <div class="recruit-info">
-            <h3>我们期待这样的你</h3>
+            <h3 style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">我们期待这样的你</h3>
             <ul>
               <li v-for="point in recruitPoints" :key="point">{{ point }}</li>
             </ul>
           </div>
           <div class="recruit-process">
-            <h3>加入流程</h3>
+            <h3 style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">加入流程</h3>
             <div class="process-steps">
               <div v-for="(step, index) in recruitSteps" :key="step" class="step">
                 <div class="step-number">{{ index + 1 }}</div>
@@ -584,11 +585,11 @@ onBeforeUnmount(() => {
       class="section contact"
     >
       <div class="content-wrapper fade-in" :class="{ visible: animatedSections[6] }">
-        <h2 class="section-title">招新报名</h2>
+        <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">招新报名</h2>
         <div class="contact-content">
           <div class="contact-info">
             <span class="contact-info-label">CONTACT</span>
-            <h3 class="contact-info-title">联系我们</h3>
+            <h3 class="contact-info-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">联系我们</h3>
             <p class="contact-info-desc">
               如果你想了解招新流程、技术方向或加入方式，可以通过下面的信息联系406实训室，我们会尽快回复你。
             </p>
@@ -603,7 +604,7 @@ onBeforeUnmount(() => {
 
           <form class="contact-form" @submit.prevent="handleSubmit">
             <span class="contact-form-label">APPLY</span>
-            <h3 class="contact-form-title">填写报名信息</h3>
+            <h3 class="contact-form-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">填写报名信息</h3>
             <p class="contact-form-desc">
               留下你的基本信息和想法，我们会根据报名情况与你联系，安排后续沟通。
             </p>
