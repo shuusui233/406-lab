@@ -57,12 +57,14 @@ export const directionSections = [
       '聚焦 UE5 实时交互、VR 体验和数字孪生可视化，面向文旅展示、校园导览、沉浸式培训等实际场景开展项目开发。',
     projects: [
       {
+        detailId: 'ue-campus-digital-twin',
         title: '校园数字孪生可视化平台',
         description:
           '基于 UE5 构建教学楼、实验室与设备状态联动的数字孪生演示系统，用于空间展示与场景讲解。',
         preview: '校园数字孪生'
       },
       {
+        detailId: 'ue-vr-experience',
         title: '沉浸式 VR 互动体验',
         description:
           '围绕校史馆与实训课程设计多人交互流程，完成场景搭建、UI 交互和设备适配。',
@@ -92,12 +94,14 @@ export const directionSections = [
       '聚焦生成式 AI、短剧与宣传片制作，打通脚本策划、分镜设计、画面生成、剪辑包装到成片发布的完整流程。',
     projects: [
       {
+        detailId: 'ai-return-to-ruins',
         title: '归墟令',
         description: 'AI影视创作项目作品展示，卡片内自动静音预览视频内容。',
         preview: '归墟令',
         isVideoPlaceholder: true
       },
       {
+        detailId: 'ai-campus-short-drama',
         title: '校园主题 AI 短剧实验',
         description:
           '围绕校园故事设计脚本与分镜，使用 AIGC 进行角色生成、镜头拼接与后期配音。',
@@ -127,12 +131,14 @@ export const directionSections = [
       '围绕算法建模、竞赛训练、论文写作与应用落地展开，强调“从问题定义到实际部署”的完整研究链路。',
     projects: [
       {
+        detailId: 'research-vision-competition',
         title: '智能识别竞赛项目',
         description:
           '围绕图像识别与分类任务完成数据清洗、模型训练和结果分析，服务竞赛备赛与答辩展示。',
         preview: '竞赛方案'
       },
       {
+        detailId: 'research-campus-ai',
         title: '校园场景 AI 应用落地',
         description:
           '结合问答助手、视觉识别与业务流程优化，探索人工智能在校园服务中的实际应用。',

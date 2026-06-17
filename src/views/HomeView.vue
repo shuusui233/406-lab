@@ -422,8 +422,8 @@ onBeforeUnmount(() => {
       class="section hero"
     >
       <div class="content-wrapper fade-in" :class="{ visible: animatedSections[0] }">
-        <h1 style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold', 'Microsoft YaHei', sans-serif;">欢迎来到406实训室</h1>
-        <p style="font-family: 'AlimamaFangYuanTiVF-Thin', 'Microsoft YaHei', sans-serif;">创新与实践相遇，梦想在此起航</p>
+        <h1 style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold'">欢迎来到406实训室</h1>
+        <p style="font-family: 'AlimamaFangYuanTiVF-Thin'">创新与实践相遇，梦想在此起航</p>
         <button class="btn btn-primary" type="button" @click="jumpToSection('recruit-section')">
           招新报名
         </button>
@@ -436,11 +436,11 @@ onBeforeUnmount(() => {
       class="section about"
     >
       <div class="content-wrapper fade-in" :class="{ visible: animatedSections[1] }">
-        <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">关于我们</h2>
+        <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold'">关于我们</h2>
         <div class="about-content">
           <div class="about-text">
             <span class="about-kicker">ABOUT 406 LAB</span>
-            <h2 style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold', 'Microsoft YaHei', sans-serif;">让技术、创意与实践在同一个空间里发生</h2>
+            <h2 style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold'">让技术、创意与实践在同一个空间里发生</h2>
             <p class="about-lead">
               406实训室是一个融合
               <strong>硬核开发</strong>
@@ -452,7 +452,7 @@ onBeforeUnmount(() => {
             </p>
             <div class="about-points">
               <div v-for="point in aboutPoints" :key="point.title" class="about-point">
-                <strong style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold', 'Microsoft YaHei', sans-serif;font-size: 1.3rem;">{{ point.title }}</strong>
+                <strong style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold'; font-size: 1.3rem;">{{ point.title }}</strong>
                 <span style="font-size: 1.1rem;">{{ point.description }}</span>
               </div>
             </div>
@@ -471,7 +471,7 @@ onBeforeUnmount(() => {
             >
               <span class="feature-tag">{{ card.tag }}</span>
               <span class="feature-icon" aria-hidden="true">{{ card.icon }}</span>
-              <h3 style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold', 'Microsoft YaHei', sans-serif;">{{ card.title }}</h3>
+              <h3 style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold'">{{ card.title }}</h3>
               <p style="font-size: 1rem;">{{ card.summary }}</p>
             </button>
           </div>
@@ -494,18 +494,26 @@ onBeforeUnmount(() => {
       >
         <div class="direction-header">
           <span class="direction-label" style="font-family: 'AlimamaFangYuanTiVF-Thin'">{{ direction.label }}</span>
-          <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">{{ direction.title }}</h2>
+          <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold'">{{ direction.title }}</h2>
           <p class="direction-desc">{{ direction.description }}</p>
         </div>
 
         <div class="content-block">
-          <h3 class="block-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">项目作品</h3>
+          <h3 class="block-title" style="font-family: 'AlimamaShuHeiTi-Bold'">项目作品</h3>
           <div class="projects-grid">
-            <article
+            <RouterLink
               v-for="project in direction.projects"
-              :key="project.title"
+              :key="project.detailId || project.title"
               class="project-card"
               :class="{ 'project-card-video-preview': project.isVideoPlaceholder }"
+              :to="
+                project.detailId
+                  ? {
+                      path: `/projects/${project.detailId}`,
+                      query: { category: direction.key }
+                    }
+                  : `/works/${direction.key}`
+              "
             >
               <div class="project-image">
                 <template v-if="project.isVideoPlaceholder">
@@ -519,9 +527,9 @@ onBeforeUnmount(() => {
                 <h3>{{ project.title }}</h3>
                 <p>{{ project.description }}</p>
               </div>
-            </article>
+            </RouterLink>
           </div>
-          <div class="projects-actions" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">
+          <div class="projects-actions" style="font-family: 'AlimamaShuHeiTi-Bold'">
             <RouterLink class="btn btn-outline-light" :to="`/works/${direction.key}`">
               更多作品
             </RouterLink>
@@ -529,7 +537,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="content-block">
-          <h3 class="block-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">教师团队</h3>
+          <h3 class="block-title" style="font-family: 'AlimamaShuHeiTi-Bold'">教师团队</h3>
           <div class="mentor-grid">
             <article
               v-for="mentor in direction.mentors"
@@ -553,16 +561,16 @@ onBeforeUnmount(() => {
       class="section recruit"
     >
       <div class="content-wrapper fade-in" :class="{ visible: animatedSections[5] }">
-        <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">招新信息</h2>
+        <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold'">招新信息</h2>
         <div class="recruit-content">
           <div class="recruit-info">
-            <h3 style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">我们期待这样的你</h3>
+            <h3 style="font-family: 'AlimamaShuHeiTi-Bold'">我们期待这样的你</h3>
             <ul>
               <li v-for="point in recruitPoints" :key="point">{{ point }}</li>
             </ul>
           </div>
           <div class="recruit-process">
-            <h3 style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">加入流程</h3>
+            <h3 style="font-family: 'AlimamaShuHeiTi-Bold'">加入流程</h3>
             <div class="process-steps">
               <div v-for="(step, index) in recruitSteps" :key="step" class="step">
                 <div class="step-number">{{ index + 1 }}</div>
@@ -585,11 +593,11 @@ onBeforeUnmount(() => {
       class="section contact"
     >
       <div class="content-wrapper fade-in" :class="{ visible: animatedSections[6] }">
-        <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">招新报名</h2>
+        <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold'">招新报名</h2>
         <div class="contact-content">
           <div class="contact-info">
             <span class="contact-info-label">CONTACT</span>
-            <h3 class="contact-info-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">联系我们</h3>
+            <h3 class="contact-info-title" style="font-family: 'AlimamaShuHeiTi-Bold'">联系我们</h3>
             <p class="contact-info-desc">
               如果你想了解招新流程、技术方向或加入方式，可以通过下面的信息联系406实训室，我们会尽快回复你。
             </p>
@@ -604,7 +612,7 @@ onBeforeUnmount(() => {
 
           <form class="contact-form" @submit.prevent="handleSubmit">
             <span class="contact-form-label">APPLY</span>
-            <h3 class="contact-form-title" style="font-family: 'AlimamaShuHeiTi-Bold', 'Microsoft YaHei', sans-serif;">填写报名信息</h3>
+            <h3 class="contact-form-title" style="font-family: 'AlimamaShuHeiTi-Bold'">填写报名信息</h3>
             <p class="contact-form-desc">
               留下你的基本信息和想法，我们会根据报名情况与你联系，安排后续沟通。
             </p>
