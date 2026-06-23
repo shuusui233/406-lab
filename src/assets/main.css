@@ -173,6 +173,8 @@ body.page-home {
 }
 
 .bg-static {
+  background: linear-gradient(-45deg, #0f172a, #155e75, #0f766e, #0891b2, #22d3ee, #67e8f9);
+  background-size: 400% 400%;
   background-position: 35% 50%;
 }
 
@@ -1121,6 +1123,8 @@ body.page-works.theme-research {
 }
 
 .page-shell {
+  position: relative;
+  z-index: 1;
   width: min(1180px, calc(100% - 40px));
   margin: 0 auto;
   padding: 32px 0 56px;
@@ -1552,6 +1556,345 @@ body.page-works.theme-research {
   border-radius: 50%;
   background: var(--direction-accent);
   box-shadow: 0 0 0 5px rgba(var(--direction-accent-rgb), 0.14);
+}
+
+body.page-home {
+  background: #ebf7ff;
+  color: #0f172a;
+}
+
+body.page-home::before,
+body.page-works::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 3px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 3px);
+  background-size: 38px 38px;
+}
+
+body.page-home .background-stack {
+  opacity: 0.14;
+}
+
+body.page-home .bg-overlay {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(235, 247, 255, 0.94) 100%);
+}
+
+body.page-home .nav {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.96) 0%,
+    rgba(255, 255, 255, 0.88) 42%,
+    rgba(255, 255, 255, 0.72) 72%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+body.page-home .nav-brand,
+body.page-home .nav-link,
+body.page-home .nav-dropdown-toggle,
+body.page-home .nav-status {
+  color: #0f172a;
+}
+
+body.page-home .lab-subtitle,
+body.page-home .nav-status-label {
+  color: #64748b;
+}
+
+body.page-home .nav-status {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(148, 163, 184, 0.28);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+body.page-home .nav-dropdown-menu {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(148, 163, 184, 0.22);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
+}
+
+body.page-home .nav-dropdown-menu .nav-link:hover {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+body.page-home .section::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+body.page-home .hero,
+body.page-home .about-text {
+  color: #0f172a;
+}
+
+body.page-home .hero h1 {
+  text-shadow: none;
+}
+
+body.page-home .section-title,
+body.page-home .direction-header .section-title {
+  color: #0f172a;
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+
+body.page-home .about-text h2,
+body.page-home .feature-card h3,
+body.page-home .block-title,
+body.page-home .project-info h3,
+body.page-home .mentor-card h4,
+body.page-home .recruit-info h3,
+body.page-home .recruit-process h3,
+body.page-home .contact-info-title,
+body.page-home .contact-form-title,
+body.page-home .contact-item h3 {
+  color: #0f172a;
+}
+
+body.page-home .about-lead,
+body.page-home .about-point span,
+body.page-home .about-note,
+body.page-home .feature-card p,
+body.page-home .project-info p,
+body.page-home .mentor-role,
+body.page-home .mentor-card p,
+body.page-home .recruit-info li,
+body.page-home .step p,
+body.page-home .contact-info-desc,
+body.page-home .contact-item p,
+body.page-home .contact-form-desc,
+body.page-home .direction-desc {
+  color: #475569;
+}
+
+body.page-home .about-kicker,
+body.page-home .contact-info-label,
+body.page-home .contact-form-label,
+body.page-home .direction-label,
+body.page-home .feature-tag {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(148, 163, 184, 0.28);
+}
+
+body.page-home .about-kicker,
+body.page-home .contact-info-label,
+body.page-home .contact-form-label,
+body.page-home .feature-tag {
+  color: #475569;
+}
+
+body.page-home .about-point,
+body.page-home .feature-card,
+body.page-home .project-card,
+body.page-home .mentor-card,
+body.page-home .recruit-info,
+body.page-home .recruit-process,
+body.page-home .contact-info,
+body.page-home .contact-form,
+body.page-home .contact-item {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(148, 163, 184, 0.2);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+}
+
+body.page-home .feature-card:hover,
+body.page-home .project-card:hover,
+body.page-home .mentor-card:hover {
+  background: #ffffff;
+  border-color: rgba(var(--direction-accent-rgb), 0.28);
+}
+
+body.page-home .about-point strong {
+  color: #0f172a;
+}
+
+body.page-home .direction-card::after {
+  color: #475569;
+}
+
+body.page-home .direction-header {
+  background:
+    linear-gradient(135deg, rgba(var(--direction-accent-rgb), 0.12), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+  border-color: rgba(148, 163, 184, 0.2);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.1);
+}
+
+body.page-home .theme-research .direction-label {
+  color: #6d28d9;
+  background: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.18);
+}
+
+body.page-home .content-block {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(148, 163, 184, 0.18);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
+}
+
+body.page-home .btn-outline-light {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(148, 163, 184, 0.28);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+body.page-home .btn-outline-light:hover {
+  background: #ffffff;
+}
+
+body.page-home .btn-secondary,
+body.page-works .btn-secondary {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+body.page-home .btn-secondary:hover,
+body.page-works .btn-secondary:hover {
+  background: #ffffff;
+}
+
+body.page-home .project-image {
+  color: #0f172a;
+  background:
+    linear-gradient(135deg, rgba(var(--direction-accent-rgb), 0.16), rgba(255, 255, 255, 0.96)),
+    #ebf7ff;
+}
+
+body.page-home .project-video-placeholder {
+  color: #0f172a;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.14), rgba(255, 255, 255, 0.92));
+}
+
+body.page-home .contact-item-icon {
+  background: rgba(37, 99, 235, 0.1);
+}
+
+body.page-home .form-group label {
+  color: #0f172a;
+}
+
+body.page-home .form-group input,
+body.page-home .form-group textarea {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+body.page-home .form-group input::placeholder,
+body.page-home .form-group textarea::placeholder {
+  color: #94a3b8;
+}
+
+body.page-home .form-group input:focus,
+body.page-home .form-group textarea:focus {
+  background: #ffffff;
+}
+
+body.page-works {
+  background: #ebf7ff;
+}
+
+body.page-works.theme-ue,
+body.page-works.theme-ai,
+body.page-works.theme-research {
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.08), transparent 28%),
+    radial-gradient(circle at top right, rgba(6, 182, 212, 0.08), transparent 24%),
+    linear-gradient(180deg, #ffffff 0%, #ebf7ff 52%, #dff2ff 100%);
+}
+
+body.page-works .works-section {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(148, 163, 184, 0.18);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+body.page-works .detail-breadcrumb,
+body.page-works .detail-breadcrumb a,
+body.page-works .section-desc,
+body.page-works .preview-header p,
+body.page-works .preview-card-body p,
+body.page-works .detail-paragraph,
+body.page-works .detail-paragraph.is-subtle,
+body.page-works .detail-list,
+body.page-works .works-hero-panel small,
+body.page-works .status-panel {
+  color: #475569;
+}
+
+body.page-works .detail-breadcrumb a:hover {
+  color: #0f172a;
+}
+
+body.page-works .works-section h2,
+body.page-works .preview-header h3,
+body.page-works .preview-card h4,
+body.page-works .detail-shell h2,
+body.page-works .detail-card h3,
+body.page-works .detail-list strong,
+body.page-works .works-hero-panel,
+body.page-works .detail-media-title {
+  color: #0f172a;
+}
+
+body.page-works .works-hero-panel,
+body.page-works .project-preview-card,
+body.page-works .detail-card,
+body.page-works .status-panel {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(148, 163, 184, 0.18);
+}
+
+body.page-works .project-preview-card:hover {
+  background: #ffffff;
+}
+
+body.page-works .project-chip {
+  color: #334155;
+  background: rgba(241, 245, 249, 0.92);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+body.page-works .preview-placeholder {
+  color: #0f172a;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.86)),
+    linear-gradient(135deg, rgba(var(--direction-accent-rgb), 0.18), rgba(255, 255, 255, 0.95));
+  border-bottom-color: rgba(148, 163, 184, 0.16);
+}
+
+body.page-works .preview-placeholder-badge {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+body.page-works .status-panel.is-error {
+  color: #b91c1c;
+  background: rgba(254, 242, 242, 0.96);
+  border-color: rgba(248, 113, 113, 0.24);
+}
+
+body.page-works .detail-preview {
+  background: #ffffff;
+  border-color: rgba(148, 163, 184, 0.18);
+}
+
+body.page-works .detail-media-placeholder {
+  color: #334155;
+  background:
+    linear-gradient(135deg, rgba(var(--direction-accent-rgb), 0.14), rgba(255, 255, 255, 0.98)),
+    #ffffff;
+}
+
+body.page-works .detail-media-note {
+  color: #64748b;
 }
 
 @keyframes gradient-bg {

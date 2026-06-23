@@ -494,7 +494,7 @@ onBeforeUnmount(() => {
       >
         <div class="direction-header">
           <span class="direction-label" style="font-family: 'AlimamaFangYuanTiVF-Thin'">{{ direction.label }}</span>
-          <h2 class="section-title" style="font-family: 'AlimamaShuHeiTi-Bold'">{{ direction.title }}</h2>
+          <h2 class="section-title" >{{ direction.title }}</h2>
           <p class="direction-desc">{{ direction.description }}</p>
         </div>
 
