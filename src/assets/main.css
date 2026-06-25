@@ -642,7 +642,7 @@ body[data-bg-stage='2'] .bg-static {
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
 }
 
-.direction-header::before {
+/* .direction-header::before {
   content: '';
   position: absolute;
   top: -80px;
@@ -655,7 +655,7 @@ body[data-bg-stage='2'] .bg-static {
     rgba(var(--direction-accent-rgb), 0.28) 0%,
     rgba(var(--direction-accent-rgb), 0) 68%
   );
-}
+} */
 
 .direction-header .section-title {
   margin-bottom: 1rem;
