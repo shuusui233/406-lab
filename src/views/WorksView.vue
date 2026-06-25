@@ -117,7 +117,7 @@ onBeforeUnmount(() => {
   <main v-if="page" class="page-shell">
     <header class="page-header">
       <div class="brand-block">
-        <h1>406实训室</h1>
+        <h1 style="font-family: 'AlibabaPuHuiTi-2-95-ExtraBold'">欢迎来到406实训室</h1>
         <p>{{ page.pageTitle }}</p>
       </div>
       <div class="header-actions">

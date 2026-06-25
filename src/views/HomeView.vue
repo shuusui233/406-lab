@@ -492,8 +492,8 @@ onBeforeUnmount(() => {
         :class="{ visible: animatedSections[offset + 2] }"
       >
         <div class="direction-header">
-          <span class="direction-label">{{ direction.label }}</span>
-          <h2 class="section-title">{{ direction.title }}</h2>
+          <span class="direction-label" style="font-family: 'AlimamaFangYuanTiVF-Thin'">{{ direction.label }}</span>
+          <h2 class="section-title" >{{ direction.title }}</h2>
           <p class="direction-desc">{{ direction.description }}</p>
         </div>
 
