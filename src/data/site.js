@@ -26,7 +26,7 @@ export const directionCards = [
     tag: 'Direction 01',
     icon: '🎮',
     title: 'UE互动开发',
-    summary: 'UE5 / VR / 数字孪生 / 实时交互'
+    summary: 'UE5 / 游戏开发 / 数字孪生 / 虚拟现实'
   },
   {
     id: 'ai-section',
@@ -54,7 +54,7 @@ export const directionSections = [
     label: '技术方向 01',
     title: 'UE互动开发',
     description:
-      '聚焦 UE5 实时交互、VR 体验和数字孪生可视化，面向文旅展示、校园导览、沉浸式培训等实际场景开展项目开发。',
+      '聚焦 UE5 虚拟现实、游戏开发和数字孪生可视化，面向文旅展示、校园导览、沉浸式培训等实际场景开展项目开发。',
     projects: [
       {
         title: '校园数字孪生可视化平台',
@@ -71,7 +71,7 @@ export const directionSections = [
     ],
     mentors: [
       {
-        name: '杨振樱 & 谢文智',
+        name: '杨振樱',
         role: '核心 UE 开发',
         description: '负责游戏逻辑与系统架构，带领团队完成多个UE项目开发。'
       },
@@ -163,17 +163,12 @@ export const contactItems = [
   {
     icon: '址',
     title: '地址',
-    content: 'XX大学XX校区XX楼406室'
+    content: '河北师范大学裕华校区理科群楼C座406室'
   },
   {
     icon: '邮',
     title: '邮箱',
-    content: 'contact@406lab.com'
-  },
-  {
-    icon: '群',
-    title: 'QQ群',
-    content: '123456789'
+    content: 'yangzhenying@onest.net'
   }
 ];
 

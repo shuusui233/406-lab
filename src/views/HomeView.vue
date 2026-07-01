@@ -5,13 +5,17 @@ import {
   aboutPoints,
   contactItems,
   directionCards,
-  directionSections,
+  directionSections as staticDirectionSections,
   recruitPoints,
   recruitSteps
 } from '../data/site';
+import { getProjects } from '../api/projects';
 
 const route = useRoute();
 const router = useRouter();
+
+// 动态项目数据
+const apiProjects = ref([]);
 
 const sectionIds = [
   'home-section',
@@ -35,7 +39,7 @@ const sectionScrollState = new WeakMap();
 
 const form = reactive({
   name: '',
-  email: '',
+  contact: '',
   message: ''
 });
 
@@ -44,6 +48,51 @@ const submitState = reactive({
   type: '',
   message: ''
 });
+
+// 合并静态数据与API数据，按分类组织项目
+const directionSections = computed(() => {
+  const categoryMap = { ue: 'ue-section', ai: 'ai-section', research: 'research-section' };
+  // 首页每个分类最多显示的项目数量
+  const maxProjectsPerSection = 2;
+  
+  return staticDirectionSections.map(section => {
+    // 获取该分类下的API项目
+    const categoryProjects = apiProjects.value.filter(p => p.category === section.key && p.visible);
+    
+    // 优先选择标记为首页展示的项目
+    const homeProjects = categoryProjects.filter(p => p.showOnHome);
+    const otherProjects = categoryProjects.filter(p => !p.showOnHome);
+    
+    // 合并：首页展示项目优先，然后补充其他项目
+    const sortedProjects = [...homeProjects, ...otherProjects];
+    
+    // 转换为卡片展示格式
+    const formattedProjects = sortedProjects.map(p => ({
+      id: p.id,
+      title: p.title,
+      description: p.description || p.introduction || '',
+      preview: p.coverUrl ? '' : p.title.substring(0, 6),
+      coverUrl: p.coverUrl
+    }));
+    
+    // 限制显示数量，最多显示 maxProjectsPerSection 个项目
+    const displayProjects = formattedProjects.length > 0 
+      ? formattedProjects.slice(0, maxProjectsPerSection) 
+      : section.projects.slice(0, maxProjectsPerSection);
+    
+    return {
+      ...section,
+      projects: displayProjects
+    };
+  });
+});
+
+// 跳转到项目详情页
+function goToProjectDetail(project) {
+  if (project.id) {
+    router.push(`/projects/${project.id}`);
+  }
+}
 
 const fullpageStyle = computed(() => ({
   transform: `translateY(-${currentIndex.value * 100}vh)`
@@ -286,7 +335,7 @@ async function handleSubmit() {
     submitState.type = 'success';
     submitState.message = result.message;
     form.name = '';
-    form.email = '';
+    form.contact = '';
     form.message = '';
   } catch (error) {
     submitState.type = 'error';
@@ -314,6 +363,13 @@ onMounted(async () => {
   document.addEventListener('wheel', handleWheel, { passive: false });
   document.addEventListener('keydown', handleKeydown);
   document.addEventListener('click', handleDocumentClick);
+
+  // 获取项目数据
+  try {
+    apiProjects.value = await getProjects();
+  } catch (error) {
+    console.error('获取项目数据失败:', error);
+  }
 
   await nextTick();
 
@@ -502,12 +558,16 @@ onBeforeUnmount(() => {
           <div class="projects-grid">
             <article
               v-for="project in direction.projects"
-              :key="project.title"
+              :key="project.id || project.title"
               class="project-card"
               :class="{ 'project-card-video-preview': project.isVideoPlaceholder }"
+              @click="goToProjectDetail(project)"
             >
               <div class="project-image">
-                <template v-if="project.isVideoPlaceholder">
+                <template v-if="project.coverUrl">
+                  <img :src="project.coverUrl" :alt="project.title" class="project-preview-image" />
+                </template>
+                <template v-else-if="project.isVideoPlaceholder">
                   <div class="project-video-placeholder">视频素材待补充</div>
                 </template>
                 <template v-else>
@@ -599,6 +659,20 @@ onBeforeUnmount(() => {
                 <p>{{ item.content }}</p>
               </div>
             </div>
+            
+            <div class="contact-qr-section">
+              <div class="contact-qr-images">
+                <div class="contact-qr-item">
+                  <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=bilibili%20QR%20code%20with%20cute%20anime%20character%20blue%20theme%20AIP-Future&image_size=square" alt="B站二维码" class="contact-qr-img">
+                  <span class="contact-qr-label">B站</span>
+                </div>
+                <div class="contact-qr-item">
+                  <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=douyin%20TikTok%20QR%20code%20orange%20theme%20cartoon%20duck%20mascot&image_size=square" alt="抖音二维码" class="contact-qr-img">
+                  <span class="contact-qr-label">抖音</span>
+                </div>
+              </div>
+              <p class="contact-qr-text">更多作品请扫描二维码观看</p>
+            </div>
           </div>
 
           <form class="contact-form" @submit.prevent="handleSubmit">
@@ -619,13 +693,13 @@ onBeforeUnmount(() => {
               >
             </div>
             <div class="form-group">
-              <label for="email">邮箱</label>
+              <label for="contact">联系方式</label>
               <input
-                id="email"
-                v-model.trim="form.email"
-                type="email"
-                name="email"
-                placeholder="请输入常用邮箱"
+                id="contact"
+                v-model.trim="form.contact"
+                type="text"
+                name="contact"
+                placeholder="请输入你的联系方式（电话或邮箱）"
                 required
               >
             </div>

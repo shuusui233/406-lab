@@ -659,7 +659,12 @@ async function handleApi(req, res) {
             
             sql += ' ORDER BY sortOrder ASC';
             
-            const projects = await getAll(sql, params);
+            let projects = await getAll(sql, params);
+            projects = projects.map(p => ({
+                ...p,
+                imageUrls: p.imageUrls ? JSON.parse(p.imageUrls) : [],
+                videoUrls: p.videoUrls ? JSON.parse(p.videoUrls) : []
+            }));
             sendJson(res, 200, { success: true, message: 'ok', data: projects });
         } catch (err) {
             console.error('Get projects error:', err);
@@ -672,8 +677,13 @@ async function handleApi(req, res) {
     const projectMatch = pathname.match(/^\/api\/projects\/(\d+)$/);
     if (projectMatch && method === 'GET') {
         try {
-            const project = await getOne('SELECT * FROM projects WHERE id = ? AND visible = 1', [projectMatch[1]]);
+            let project = await getOne('SELECT * FROM projects WHERE id = ? AND visible = 1', [projectMatch[1]]);
             if (project) {
+                project = {
+                    ...project,
+                    imageUrls: project.imageUrls ? JSON.parse(project.imageUrls) : [],
+                    videoUrls: project.videoUrls ? JSON.parse(project.videoUrls) : []
+                };
                 sendJson(res, 200, { success: true, message: 'ok', data: project });
             } else {
                 sendJson(res, 404, { success: false, message: '数据不存在', errorCode: 'NOT_FOUND' });
@@ -713,7 +723,7 @@ async function handleApi(req, res) {
 
         try {
             const body = await parseBody(req);
-            const { title, category, type, description, coverUrl, videoUrl, sortOrder, visible } = body;
+            const { title, category, type, description, coverUrl, imageUrls, videoUrls, sortOrder, visible } = body;
             
             if (!title || !category) {
                 sendJson(res, 400, { success: false, message: '标题和分类不能为空', errorCode: 'INVALID_PARAMS' });
@@ -726,8 +736,8 @@ async function handleApi(req, res) {
             }
 
             await runQuery(
-                'UPDATE projects SET title = ?, category = ?, type = ?, description = ?, coverUrl = ?, videoUrl = ?, sortOrder = ?, visible = ?, updatedAt = datetime("now") WHERE id = ?',
-                [title, category, type || '', description || '', coverUrl || '', videoUrl || '', sortOrder || 0, visible !== undefined ? visible : 1, projectMatch[1]]
+                'UPDATE projects SET title = ?, category = ?, type = ?, description = ?, coverUrl = ?, imageUrls = ?, videoUrls = ?, sortOrder = ?, visible = ?, updatedAt = datetime("now") WHERE id = ?',
+                [title, category, type || '', description || '', coverUrl || '', JSON.stringify(Array.isArray(imageUrls) ? imageUrls : []), JSON.stringify(Array.isArray(videoUrls) ? videoUrls : []), sortOrder || 0, visible !== undefined ? visible : 1, projectMatch[1]]
             );
             
             saveDatabase();
@@ -749,7 +759,7 @@ async function handleApi(req, res) {
 
         try {
             const body = await parseBody(req);
-            const { title, category, type, description, coverUrl, videoUrl, sortOrder, visible } = body;
+            const { title, category, type, description, coverUrl, imageUrls, videoUrls, sortOrder, visible } = body;
             
             if (!title || !category) {
                 sendJson(res, 400, { success: false, message: '标题和分类不能为空', errorCode: 'INVALID_PARAMS' });
@@ -762,8 +772,8 @@ async function handleApi(req, res) {
             }
 
             await runQuery(
-                'INSERT INTO projects (title, category, type, description, coverUrl, videoUrl, sortOrder, visible, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime("now"), datetime("now"))',
-                [title, category, type || '', description || '', coverUrl || '', videoUrl || '', sortOrder || 0, visible !== undefined ? visible : 1]
+                'INSERT INTO projects (title, category, type, description, coverUrl, imageUrls, videoUrls, sortOrder, visible, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime("now"), datetime("now"))',
+                [title, category, type || '', description || '', coverUrl || '', JSON.stringify(Array.isArray(imageUrls) ? imageUrls : []), JSON.stringify(Array.isArray(videoUrls) ? videoUrls : []), sortOrder || 0, visible !== undefined ? visible : 1]
             );
             
             saveDatabase();

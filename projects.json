@@ -1,184 +1,162 @@
 [
   {
-    "id": "ue-campus-digital-twin",
-    "title": "校园数字孪生可视化平台",
-    "category": "ue",
-    "type": "interactive",
-    "description": "基于 UE5 构建教学楼、实验室与设备状态联动的数字孪生演示系统，用于空间展示与场景讲解。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 1,
-    "visible": true,
-    "createdAt": "2026-06-01T09:00:00.000Z",
-    "updatedAt": "2026-06-01T09:00:00.000Z"
-  },
-  {
-    "id": "ue-vr-experience",
-    "title": "沉浸式 VR 互动体验",
-    "category": "ue",
-    "type": "vr",
-    "description": "围绕校史馆与实训课程设计多人交互流程，完成场景搭建、UI 交互和设备适配。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 2,
-    "visible": true,
-    "createdAt": "2026-06-02T09:00:00.000Z",
-    "updatedAt": "2026-06-02T09:00:00.000Z"
-  },
-  {
-    "id": "ue-smart-exhibition-guide",
-    "title": "智慧展馆交互导览",
-    "category": "ue",
-    "type": "interactive",
-    "description": "占位作品：后续可替换为真实 UE 导览项目，当前用于展示更多作品卡片布局效果。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 3,
-    "visible": true,
-    "createdAt": "2026-06-02T13:00:00.000Z",
-    "updatedAt": "2026-06-02T13:00:00.000Z"
-  },
-  {
-    "id": "ue-training-simulator",
-    "title": "虚拟实训操作模拟器",
-    "category": "ue",
-    "type": "simulation",
-    "description": "占位作品：后续可补充设备操作、流程演示等内容，当前先作为作品占位展示。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 4,
-    "visible": true,
-    "createdAt": "2026-06-02T15:00:00.000Z",
-    "updatedAt": "2026-06-02T15:00:00.000Z"
-  },
-  {
-    "id": "ai-return-to-ruins",
-    "title": "归墟令",
-    "category": "ai",
-    "type": "video",
-    "description": "AI影视创作项目作品展示，聚焦生成式视频、配音与镜头组织。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 1,
-    "visible": true,
-    "createdAt": "2026-06-03T09:00:00.000Z",
-    "updatedAt": "2026-06-03T09:00:00.000Z"
-  },
-  {
-    "id": "ai-campus-short-drama",
-    "title": "校园主题 AI 短剧实验",
-    "category": "ai",
-    "type": "short-film",
-    "description": "围绕校园故事设计脚本与分镜，使用 AIGC 进行角色生成、镜头拼接与后期配音。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 2,
-    "visible": true,
-    "createdAt": "2026-06-04T09:00:00.000Z",
-    "updatedAt": "2026-06-04T09:00:00.000Z"
-  },
-  {
-    "id": "ai-brand-promo-video",
-    "title": "品牌宣传 AI 短片",
-    "category": "ai",
-    "type": "promo",
-    "description": "占位作品：后续可替换为真实宣传片案例，当前用于占位展示更多作品内容。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 3,
-    "visible": true,
-    "createdAt": "2026-06-04T13:00:00.000Z",
-    "updatedAt": "2026-06-04T13:00:00.000Z"
-  },
-  {
-    "id": "ai-character-trailer",
-    "title": "AI 角色预告片实验",
-    "category": "ai",
-    "type": "trailer",
-    "description": "占位作品：后续可补充角色设定、镜头节奏和配音素材，当前先用于页面占位。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 4,
-    "visible": true,
-    "createdAt": "2026-06-04T15:00:00.000Z",
-    "updatedAt": "2026-06-04T15:00:00.000Z"
-  },
-  {
-    "id": "ai-character-trailer1",
-    "title": "AI 角色预告片实验1",
-    "category": "ai",
-    "type": "great",
-    "description": "占位作品：后续可补充角色设定、镜头节奏和配音素材，当前先用于页面占位。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 5,
-    "visible": true,
-    "createdAt": "2026-06-04T15:00:00.000Z",
-    "updatedAt": "2026-06-04T15:00:00.000Z"
-  },
-  {
-    "id": "research-vision-competition",
-    "title": "智能识别竞赛项目",
-    "category": "research",
-    "type": "competition",
-    "description": "围绕图像识别与分类任务完成数据清洗、模型训练和结果分析，服务竞赛备赛与答辩展示。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 1,
-    "visible": true,
-    "createdAt": "2026-06-05T09:00:00.000Z",
-    "updatedAt": "2026-06-05T09:00:00.000Z"
-  },
-  {
-    "id": "research-campus-ai",
-    "title": "校园场景 AI 应用落地",
-    "category": "research",
-    "type": "application",
-    "description": "结合问答助手、视觉识别与业务流程优化，探索人工智能在校园服务中的实际应用。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 2,
-    "visible": true,
-    "createdAt": "2026-06-06T09:00:00.000Z",
-    "updatedAt": "2026-06-06T09:00:00.000Z"
-  },
-  {
-    "id": "research-nlp-assistant",
-    "title": "校园问答助手研究",
-    "category": "research",
-    "type": "nlp",
-    "description": "占位作品：后续可替换为真实自然语言处理研究课题，当前用于补充作品列表展示。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 3,
-    "visible": true,
-    "createdAt": "2026-06-06T13:00:00.000Z",
-    "updatedAt": "2026-06-06T13:00:00.000Z"
-  },
-  {
-    "id": "research-smart-campus-analysis",
-    "title": "智慧校园数据分析实验",
-    "category": "research",
-    "type": "data-analysis",
-    "description": "占位作品：后续可补充数据来源、分析模型与可视化结果，当前先占位展示研究方向成果。",
-    "coverUrl": "",
-    "videoUrl": "",
-    "sortOrder": 4,
-    "visible": true,
-    "createdAt": "2026-06-06T15:00:00.000Z",
-    "updatedAt": "2026-06-06T15:00:00.000Z"
-  },
-  {
     "id": "1781057377739",
     "title": "末日列车",
     "category": "ai",
     "type": "AI动漫",
-    "description": "",
-    "coverUrl": "/uploads/1781057371347___2026610_193034.mp4",
+    "description": "开局一列车，超燃AI漫剧创作ing",
+    "coverUrl": "/uploads/images/1782787648209______________2026_06_30_104624.png",
     "videoUrl": "/uploads/1781057374034___2026610_193034.mp4",
     "sortOrder": 0,
     "visible": true,
     "createdAt": "2026-06-10T02:09:37.739Z",
-    "updatedAt": "2026-06-10T02:09:37.739Z"
+    "updatedAt": "2026-06-30T02:47:30.644Z",
+    "introduction": "采用AI辅助生成的漫剧",
+    "imageUrls": [],
+    "videoUrls": [
+      "/uploads/1781057374034___2026610_193034.mp4"
+    ],
+    "showOnHome": true
+  },
+  {
+    "id": 1782459004902,
+    "title": "恐怖回声",
+    "category": "ue",
+    "type": "ue游戏开发",
+    "description": "在恐怖回声中不断探索",
+    "coverUrl": "/uploads/images/1782787542589_____________.png",
+    "videoUrl": "/uploads/1782459002581_1__UE5_________________________________Av115942205955696_P1_.mp4",
+    "sortOrder": 0,
+    "visible": true,
+    "createdAt": "2026-06-26T07:30:04.902Z",
+    "updatedAt": "2026-06-30T02:45:43.824Z",
+    "introduction": "采用UE辅助生成的一款恐怖游戏",
+    "imageUrls": [],
+    "videoUrls": [
+      "/uploads/1782459002581_1__UE5_________________________________Av115942205955696_P1_.mp4"
+    ],
+    "showOnHome": true
+  },
+  {
+    "id": "1782699687010",
+    "title": "归墟令",
+    "category": "ai",
+    "type": "AI漫剧生成",
+    "description": "一人一剑捣毁冥界",
+    "introduction": "采用AI辅助生成的漫剧",
+    "coverUrl": "/uploads/images/1782778795728_______2.jpg",
+    "imageUrls": [],
+    "videoUrls": [
+      "/uploads/videos/1782778783645______________2___.mp4"
+    ],
+    "sortOrder": 0,
+    "visible": true,
+    "createdAt": "2026-06-29T02:21:27.010Z",
+    "updatedAt": "2026-06-30T00:31:40.955Z",
+    "showOnHome": true
+  },
+  {
+    "id": "1782779620220",
+    "title": "AI公益",
+    "category": "ai",
+    "type": "AI公益短剧",
+    "description": "简述公益需求",
+    "introduction": "一个用AI生成的公益广告",
+    "coverUrl": "/uploads/images/1782779611436_______4.jpg",
+    "imageUrls": [],
+    "videoUrls": [
+      "/uploads/videos/1782779616003_____________.mp4"
+    ],
+    "sortOrder": 0,
+    "visible": true,
+    "createdAt": "2026-06-30T00:33:40.220Z",
+    "updatedAt": "2026-06-30T00:33:40.220Z"
+  },
+  {
+    "id": "1782779698574",
+    "title": "AI广告",
+    "category": "ai",
+    "type": "AI广告",
+    "description": "一个关于牛肉汉堡的广告",
+    "introduction": "AI生成的关于牛肉汉堡的广告",
+    "coverUrl": "/uploads/images/1782779646713_______5.jpg",
+    "imageUrls": [],
+    "videoUrls": [
+      "/uploads/videos/1782779697017_________________________.mp4"
+    ],
+    "sortOrder": 0,
+    "visible": true,
+    "createdAt": "2026-06-30T00:34:58.574Z",
+    "updatedAt": "2026-06-30T00:34:58.574Z"
+  },
+  {
+    "id": "1782780856845",
+    "title": "UE开发",
+    "category": "ue",
+    "type": "UE游戏开发",
+    "description": "一款飞驰的游戏",
+    "introduction": "UE辅助开发的一款赛车游戏",
+    "coverUrl": "/uploads/images/1782780814211_______.png",
+    "imageUrls": [],
+    "videoUrls": [
+      "/uploads/videos/1782780817983_______.mp4"
+    ],
+    "sortOrder": 0,
+    "visible": true,
+    "createdAt": "2026-06-30T00:54:16.845Z",
+    "updatedAt": "2026-06-30T00:54:25.068Z",
+    "showOnHome": true
+  },
+  {
+    "id": "1782780928125",
+    "title": "UE开发",
+    "category": "ue",
+    "type": "UE游戏开发",
+    "description": "一款探秘游戏",
+    "introduction": "借助UE开发的一款奇幻探险游戏",
+    "coverUrl": "/uploads/images/1782780883869_____________.png",
+    "imageUrls": [],
+    "videoUrls": [
+      "/uploads/videos/1782780888041_____________.mp4"
+    ],
+    "sortOrder": 0,
+    "visible": true,
+    "createdAt": "2026-06-30T00:55:28.125Z",
+    "updatedAt": "2026-06-30T00:55:28.125Z"
+  },
+  {
+    "id": "1782781119768",
+    "title": "人工智能研究",
+    "category": "research",
+    "type": "人工智能研究",
+    "description": "关于视觉识别使用的研究",
+    "introduction": "细粒度视觉识别与智能分析",
+    "coverUrl": "/uploads/images/1782781066336_D31CB144_A1D4_48CB_9B5E_B0D137778508.png",
+    "imageUrls": [
+      "/uploads/images/1782781070997_D31CB144_A1D4_48CB_9B5E_B0D137778508.png"
+    ],
+    "videoUrls": [],
+    "sortOrder": 0,
+    "visible": true,
+    "createdAt": "2026-06-30T00:58:39.768Z",
+    "updatedAt": "2026-06-30T00:58:39.768Z"
+  },
+  {
+    "id": "1782781236225",
+    "title": "人工智能辅助医疗研究",
+    "category": "research",
+    "type": "人工智能研究",
+    "description": "医学影像智能分析",
+    "introduction": "关于人工智能辅助脑肿瘤智能分割与精准检测的研究",
+    "coverUrl": "/uploads/images/1782781178564_C6B2C23D_76AB_463D_8C6F_78EC4BD9D9E3.png",
+    "imageUrls": [
+      "/uploads/images/1782781182368_C6B2C23D_76AB_463D_8C6F_78EC4BD9D9E3.png",
+      "/uploads/images/1782781185021_D460AC51_06BE_41F5_B931_295789FC2D69.png"
+    ],
+    "videoUrls": [],
+    "sortOrder": 0,
+    "visible": true,
+    "createdAt": "2026-06-30T01:00:36.225Z",
+    "updatedAt": "2026-06-30T01:00:36.225Z"
   }
 ]

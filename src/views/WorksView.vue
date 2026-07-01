@@ -181,11 +181,13 @@ onBeforeUnmount(() => {
               query: { category: project.category }
             }"
           >
-            <div class="preview-placeholder">
+            <div v-if="project.coverUrl" class="preview-image-wrapper">
+              <img :src="project.coverUrl" :alt="project.title" class="preview-image" />
               <span class="preview-placeholder-badge">{{ page.title }}</span>
-              <span class="preview-placeholder-title">
-                {{ project.coverUrl ? '封面资源待接入' : project.title }}
-              </span>
+            </div>
+            <div v-else class="preview-placeholder">
+              <span class="preview-placeholder-badge">{{ page.title }}</span>
+              <span class="preview-placeholder-title">{{ project.title }}</span>
             </div>
             <div class="preview-card-body">
               <div class="project-meta">

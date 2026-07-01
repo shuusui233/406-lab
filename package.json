@@ -10,6 +10,7 @@
     "serve:api": "node server.js"
   },
   "dependencies": {
+    "multer": "^2.2.0",
     "vue": "^3.4.29",
     "vue-router": "^4.4.0"
   },

@@ -98,8 +98,8 @@ const projectSummary = computed(() => {
   if (!project.value) {
     return '';
   }
-
-  return project.value.description || detailContent.value?.summary || '项目简介待补充。';
+  
+  return project.value.description || project.value.introduction || detailContent.value?.summary || '项目简介待补充。';
 });
 
 const projectMetaItems = computed(() => {
@@ -110,7 +110,6 @@ const projectMetaItems = computed(() => {
   return [
     { label: '所属方向', value: categoryLabel.value || '未分类' },
     { label: '项目类型', value: typeLabel.value || '项目作品' },
-    { label: '展示排序', value: `第 ${project.value.sortOrder} 位` },
     { label: '最近更新', value: formatDate(project.value.updatedAt) }
   ];
 });
@@ -170,6 +169,17 @@ async function loadProjectDetail() {
 
   try {
     project.value = await getProjectDetail(props.id);
+    
+    // region debug-point video-debugging
+    console.log('[VIDEO-DEBUG] 项目详情加载完成:', {
+      id: project.value.id,
+      title: project.value.title,
+      videoUrl: project.value.videoUrl,
+      videoUrls: project.value.videoUrls,
+      videoUrlsCount: project.value.videoUrls?.length || 0
+    });
+    // endregion debug-point video-debugging
+    
     applyBodyClass();
   } catch (error) {
     errorMessage.value = error.message || '作品详情加载失败，请稍后重试。';
@@ -177,6 +187,40 @@ async function loadProjectDetail() {
   } finally {
     loading.value = false;
   }
+}
+
+// 视频调试事件处理函数
+function handleVideoError(event) {
+  const video = event.target;
+  console.error('[VIDEO-DEBUG] 视频加载错误:', {
+    src: video.src,
+    error: video.error,
+    errorCode: video.error?.code,
+    errorMessage: video.error?.message,
+    networkState: video.networkState,
+    readyState: video.readyState
+  });
+}
+
+function handleVideoLoadStart(event) {
+  const video = event.target;
+  console.log('[VIDEO-DEBUG] 视频开始加载:', {
+    src: video.src,
+    readyState: video.readyState,
+    networkState: video.networkState
+  });
+}
+
+function handleVideoLoadedData(event) {
+  const video = event.target;
+  console.log('[VIDEO-DEBUG] 视频数据加载完成:', {
+    src: video.src,
+    readyState: video.readyState,
+    networkState: video.networkState,
+    duration: video.duration,
+    videoWidth: video.videoWidth,
+    videoHeight: video.videoHeight
+  });
 }
 
 watch(
@@ -271,11 +315,30 @@ onBeforeUnmount(() => {
 
         <div class="detail-grid">
           <div class="detail-preview">
-            <div v-if="project.videoUrl" class="detail-media-container">
+            <div v-if="project.videoUrls && project.videoUrls.length > 0" class="detail-media-container">
+              <video 
+                :src="project.videoUrls[0]" 
+                controls 
+                preload="metadata"
+                crossOrigin="anonymous"
+                class="detail-video-player"
+                @error="handleVideoError"
+                @loadstart="handleVideoLoadStart"
+                @loadeddata="handleVideoLoadedData"
+              >
+                您的浏览器不支持视频播放
+              </video>
+            </div>
+            <div v-else-if="project.videoUrl" class="detail-media-container">
               <video 
                 :src="project.videoUrl" 
                 controls 
+                preload="metadata"
+                crossOrigin="anonymous"
                 class="detail-video-player"
+                @error="handleVideoError"
+                @loadstart="handleVideoLoadStart"
+                @loadeddata="handleVideoLoadedData"
               >
                 您的浏览器不支持视频播放
               </video>
@@ -287,28 +350,46 @@ onBeforeUnmount(() => {
               暂无封面或视频资源
             </div>
           </div>
+        </div>
 
-          <div class="detail-info">
-            <div class="detail-card">
-              <h3>接口字段</h3>
-              <ul class="detail-list">
-                <li><strong>id：</strong>{{ project.id }}</li>
-                <li><strong>title：</strong>{{ project.title }}</li>
-                <li><strong>category：</strong>{{ project.category }}</li>
-                <li><strong>type：</strong>{{ project.type }}</li>
-                <li><strong>sortOrder：</strong>{{ project.sortOrder }}</li>
-                <li><strong>visible：</strong>{{ project.visible }}</li>
-                <li><strong>createdAt：</strong>{{ project.createdAt }}</li>
-                <li><strong>updatedAt：</strong>{{ project.updatedAt }}</li>
-              </ul>
+        <div v-if="project.imageUrls && project.imageUrls.length > 0" class="detail-images-section">
+          <h3>作品图片</h3>
+          <div class="images-grid">
+            <div v-for="(url, index) in project.imageUrls" :key="index" class="image-item">
+              <img :src="url" :alt="`作品图片 ${index + 1}`" class="detail-gallery-image" />
             </div>
+          </div>
+        </div>
 
-            <div class="detail-card">
-              <h3>资源字段</h3>
-              <ul class="detail-list">
-                <li><strong>coverUrl：</strong>{{ project.coverUrl || '未提供' }}</li>
-                <li><strong>videoUrl：</strong>{{ project.videoUrl || '未提供' }}</li>
-              </ul>
+        <div v-if="project.videoUrls && project.videoUrls.length > 1" class="detail-videos-section">
+          <h3>更多视频</h3>
+          <div class="videos-grid">
+            <div v-for="(url, index) in project.videoUrls.slice(1)" :key="index" class="video-item">
+              <video 
+                :src="url" 
+                controls 
+                class="detail-video-player small"
+              >
+                您的浏览器不支持视频播放
+              </video>
+            </div>
+          </div>
+        </div>
+
+        <!-- 作品介绍 -->
+        <div class="detail-intro-section">
+          <div class="detail-intro-card">
+            <h3 class="intro-title">作品介绍</h3>
+            <p class="intro-summary">{{ projectSummary }}</p>
+          </div>
+
+          <div class="detail-meta-card">
+            <h3 class="intro-title">项目信息</h3>
+            <div class="meta-list">
+              <div v-for="item in projectMetaItems" :key="item.label" class="meta-item">
+                <span class="meta-label">{{ item.label }}</span>
+                <span class="meta-value">{{ item.value }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -320,14 +401,16 @@ onBeforeUnmount(() => {
 <style scoped>
 .detail-media-container {
   width: 100%;
-  border-radius: 16px;
+  border-radius: 22px;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .detail-video-player {
   width: 100%;
-  max-height: 600px;
+  min-height: 500px;
+  max-height: 80vh;
   display: block;
   background: #000;
 }
@@ -336,16 +419,186 @@ onBeforeUnmount(() => {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 16px;
+  border-radius: 22px;
 }
 
 .detail-media-placeholder {
   width: 100%;
   padding: 60px 20px;
   text-align: center;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(var(--direction-accent-rgb), 0.18), rgba(255, 255, 255, 0.05)),
+    rgba(255, 255, 255, 0.03);
+  border-radius: 22px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: var(--font-size-sm);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.detail-intro-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.6rem;
+  margin-top: 2rem;
+}
+
+.detail-intro-card,
+.detail-meta-card {
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.75rem;
+}
+
+.intro-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: #ffffff;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.875rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.intro-summary {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.75rem;
+  text-align: justify;
+}
+
+.intro-highlights h4,
+.intro-scene h4,
+.intro-next h4 {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: #ffffff;
+  margin: 1.5rem 0 0.75rem 0;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.intro-highlights ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.intro-highlights li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.625rem;
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.78);
+  line-height: var(--line-height-relaxed);
+}
+
+.intro-highlights li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: rgba(var(--direction-accent-rgb), 1);
+}
+
+.intro-scene p,
+.intro-next p {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
   color: rgba(255, 255, 255, 0.7);
-  font-size: 14px;
+  margin: 0;
+  text-align: justify;
+}
+
+.meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.meta-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.meta-item:last-child {
+  border-bottom: none;
+}
+
+.meta-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.meta-value {
+  font-size: var(--font-size-base);
+  color: #ffffff;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.detail-images-section,
+.detail-videos-section {
+  margin-top: 2rem;
+}
+
+.detail-images-section h3,
+.detail-videos-section h3 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.image-item {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.detail-gallery-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.video-item {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.detail-video-player.small {
+  min-height: 200px;
+}
+
+@media (max-width: 768px) {
+  .detail-intro-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .detail-video-player {
+    min-height: 300px;
+  }
 }
 </style>

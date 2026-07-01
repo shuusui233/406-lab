@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue';
 import {
   login,
   getUsers,
@@ -64,14 +64,18 @@ const projectForm = reactive({
   category: 'ue',
   type: '',
   description: '',
+  introduction: '',
   coverUrl: '',
-  videoUrl: '',
+  imageUrls: [],
+  videoUrls: [],
   sortOrder: 0,
-  visible: true
+  visible: true,
+  showOnHome: false
 });
 
 // 上传状态
 const uploadingCover = ref(false);
+const uploadingImage = ref(false);
 const uploadingVideo = ref(false);
 
 const contentForm = reactive({
@@ -197,9 +201,16 @@ function openUserModal(user = null) {
 // 打开项目编辑模态框
 function openProjectModal(project = null) {
   uploadingCover.value = false;
+  uploadingImage.value = false;
   uploadingVideo.value = false;
   if (project) {
     Object.assign(projectForm, project);
+    if (!projectForm.imageUrls) projectForm.imageUrls = [];
+    if (!projectForm.videoUrls) projectForm.videoUrls = [];
+    if (project.videoUrl && !project.videoUrls?.length) {
+      projectForm.videoUrls = [project.videoUrl];
+    }
+    if (!projectForm.showOnHome) projectForm.showOnHome = false;
     modal.title = '编辑作品';
   } else {
     projectForm.id = null;
@@ -207,10 +218,13 @@ function openProjectModal(project = null) {
     projectForm.category = 'ue';
     projectForm.type = '';
     projectForm.description = '';
+    projectForm.introduction = '';
     projectForm.coverUrl = '';
-    projectForm.videoUrl = '';
+    projectForm.imageUrls = [];
+    projectForm.videoUrls = [];
     projectForm.sortOrder = 0;
     projectForm.visible = true;
+    projectForm.showOnHome = false;
     modal.title = '添加作品';
   }
   modal.type = 'project';
@@ -253,10 +267,13 @@ async function saveProject() {
       category: projectForm.category,
       type: projectForm.type,
       description: projectForm.description,
+      introduction: projectForm.introduction,
       coverUrl: projectForm.coverUrl,
-      videoUrl: projectForm.videoUrl,
+      imageUrls: projectForm.imageUrls,
+      videoUrls: projectForm.videoUrls,
       sortOrder: projectForm.sortOrder,
-      visible: projectForm.visible
+      visible: projectForm.visible,
+      showOnHome: projectForm.showOnHome
     };
     
     if (projectForm.id) {
@@ -375,15 +392,31 @@ async function handleFileDrop(event, type) {
 // 上传文件
 async function uploadFile(file, type) {
   const isCover = type === 'cover';
+  const isImage = type === 'image';
   
-  if (isCover) {
-    uploadingCover.value = true;
+  if (isCover || isImage) {
+    const imageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!imageTypes.includes(file.type)) {
+      alert('图片仅支持 JPG、PNG、GIF、WebP 格式');
+      return;
+    }
+    if (isCover) {
+      uploadingCover.value = true;
+    } else {
+      uploadingImage.value = true;
+    }
   } else {
+    const videoTypes = ['video/mp4', 'video/webm'];
+    if (!videoTypes.includes(file.type)) {
+      alert('视频文件仅支持 MP4、WebM 格式');
+      return;
+    }
     uploadingVideo.value = true;
   }
 
   const formData = new FormData();
   formData.append('file', file);
+  formData.append('type', type);
 
   try {
     const response = await fetch('/api/upload', {
@@ -396,8 +429,10 @@ async function uploadFile(file, type) {
     if (result.success) {
       if (isCover) {
         projectForm.coverUrl = result.data.url;
+      } else if (isImage) {
+        projectForm.imageUrls.push(result.data.url);
       } else {
-        projectForm.videoUrl = result.data.url;
+        projectForm.videoUrls.push(result.data.url);
       }
     } else {
       alert(result.message || '上传失败');
@@ -408,6 +443,8 @@ async function uploadFile(file, type) {
   } finally {
     if (isCover) {
       uploadingCover.value = false;
+    } else if (isImage) {
+      uploadingImage.value = false;
     } else {
       uploadingVideo.value = false;
     }
@@ -419,13 +456,18 @@ function removeCover() {
   projectForm.coverUrl = '';
 }
 
-// 移除视频
-function removeVideo() {
-  projectForm.videoUrl = '';
+// 移除图片
+function removeImage(index) {
+  projectForm.imageUrls.splice(index, 1);
 }
 
-// 获取视频文件名
-function getVideoFileName(url) {
+// 移除视频
+function removeVideo(index) {
+  projectForm.videoUrls.splice(index, 1);
+}
+
+// 获取文件名
+function getFileName(url) {
   if (!url) return '';
   return url.split('/').pop();
 }
@@ -442,13 +484,29 @@ const stats = computed(() => ({
   projects: projects.value.filter(p => p.visible).length
 }));
 
+function clearBodyClass() {
+  document.body.classList.remove(
+    'page-works',
+    'theme-ue',
+    'theme-ai',
+    'theme-research',
+    'page-home'
+  );
+  document.body.removeAttribute('data-bg-stage');
+}
+
 // 初始化检查登录状态
 onMounted(() => {
+  clearBodyClass();
   const savedUser = localStorage.getItem('adminUser');
   if (savedUser) {
     isLoggedIn.value = true;
     loadAllData();
   }
+});
+
+onBeforeUnmount(() => {
+  clearBodyClass();
 });
 </script>
 
@@ -788,9 +846,13 @@ onMounted(() => {
               <textarea v-model="projectForm.description"></textarea>
             </div>
             <div class="form-group">
+              <label>作品介绍</label>
+              <textarea v-model="projectForm.introduction" rows="6" placeholder="请输入作品的详细介绍，包括项目背景、技术特点、实现方案等"></textarea>
+            </div>
+            <div class="form-group">
               <label>封面图片</label>
               <div class="upload-area" @click="triggerFileUpload('cover')" @dragover.prevent @drop.prevent="handleFileDrop($event, 'cover')">
-                <input ref="coverInput" type="file" accept="image/*" class="file-input" @change="handleFileSelect($event, 'cover')" />
+                <input ref="coverInput" type="file" accept="image/*" class="file-input" data-type="cover" @change="handleFileSelect($event, 'cover')" />
                 <div v-if="projectForm.coverUrl && !uploadingCover" class="upload-preview">
                   <img :src="projectForm.coverUrl" />
                   <button class="remove-btn" @click.stop="removeCover">✕</button>
@@ -807,24 +869,47 @@ onMounted(() => {
               </div>
             </div>
             <div class="form-group">
+              <label>作品图片</label>
+              <div v-if="projectForm.imageUrls.length > 0" class="files-grid">
+                <div v-for="(url, index) in projectForm.imageUrls" :key="index" class="file-item">
+                  <img :src="url" :alt="getFileName(url)" />
+                  <button class="remove-btn" @click.stop="removeImage(index)">✕</button>
+                </div>
+              </div>
+              <div class="upload-area" @click="triggerFileUpload('image')" @dragover.prevent @drop.prevent="handleFileDrop($event, 'image')">
+                <input ref="imageInput" type="file" accept="image/*" class="file-input" data-type="image" @change="handleFileSelect($event, 'image')" />
+                <div v-if="uploadingImage" class="upload-loading">
+                  <div class="spinner"></div>
+                  <span>上传中...</span>
+                </div>
+                <div v-else class="upload-placeholder">
+                  <span class="upload-icon">📷</span>
+                  <span>点击或拖拽上传作品图片</span>
+                  <span class="upload-hint">支持 JPG、PNG、GIF、WebP 格式，可添加多张</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
               <label>视频文件</label>
-              <div class="upload-area" @click="triggerFileUpload('video')" @dragover.prevent @drop.prevent="handleFileDrop($event, 'video')">
-                <input ref="videoInput" type="file" accept="video/*" class="file-input" @change="handleFileSelect($event, 'video')" />
-                <div v-if="projectForm.videoUrl && !uploadingVideo" class="upload-preview video-preview">
+              <div v-if="projectForm.videoUrls.length > 0" class="files-grid">
+                <div v-for="(url, index) in projectForm.videoUrls" :key="index" class="file-item video-item">
                   <div class="video-icon">🎬</div>
                   <div class="video-info">
-                    <span>{{ getVideoFileName(projectForm.videoUrl) }}</span>
+                    <span>{{ getFileName(url) }}</span>
                   </div>
-                  <button class="remove-btn" @click.stop="removeVideo">✕</button>
+                  <button class="remove-btn" @click.stop="removeVideo(index)">✕</button>
                 </div>
-                <div v-else-if="uploadingVideo" class="upload-loading">
+              </div>
+              <div class="upload-area" @click="triggerFileUpload('video')" @dragover.prevent @drop.prevent="handleFileDrop($event, 'video')">
+                <input ref="videoInput" type="file" accept="video/*" class="file-input" data-type="video" @change="handleFileSelect($event, 'video')" />
+                <div v-if="uploadingVideo" class="upload-loading">
                   <div class="spinner"></div>
                   <span>上传中...</span>
                 </div>
                 <div v-else class="upload-placeholder">
                   <span class="upload-icon">🎥</span>
                   <span>点击或拖拽上传视频文件</span>
-                  <span class="upload-hint">支持 MP4、WebM 格式</span>
+                  <span class="upload-hint">支持 MP4、WebM 格式，可添加多个</span>
                 </div>
               </div>
             </div>
@@ -837,6 +922,13 @@ onMounted(() => {
                 <input v-model="projectForm.visible" type="checkbox" />
                 <span>设为可见</span>
               </label>
+            </div>
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input v-model="projectForm.showOnHome" type="checkbox" />
+                <span>首页展示</span>
+              </label>
+              <p class="form-hint">勾选后该作品将在首页对应分类中展示（最多显示2个）</p>
             </div>
           </div>
         </div>
@@ -1156,6 +1248,50 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
+}
+
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.file-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+}
+
+.file-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.file-item.video-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1a1a2e;
+  color: white;
+  padding: 12px;
+  aspect-ratio: auto;
+}
+
+.file-item.video-item .video-icon {
+  font-size: 28px;
+}
+
+.file-item.video-item .video-info {
+  flex: 1;
+  text-align: left;
+}
+
+.file-item.video-item .video-info span {
+  font-size: 12px;
+  color: #aaa;
 }
 
 .remove-btn:hover {
@@ -1742,6 +1878,12 @@ onMounted(() => {
 .checkbox-label input[type="checkbox"] {
   width: 18px;
   height: 18px;
+}
+
+.form-hint {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #666;
 }
 
 .btn-secondary {

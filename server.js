@@ -2,6 +2,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import multer from 'multer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,6 +18,42 @@ const DIST_DIR = path.join(__dirname, 'dist');
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PROJECT_CATEGORIES = ['ue', 'ai', 'research'];
+
+// 配置文件上传存储
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    let subDir = '';
+    
+    if (['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext)) {
+      subDir = 'images';
+    } else if (['.mp4', '.webm'].includes(ext)) {
+      subDir = 'videos';
+    } else {
+      return cb(new Error('不支持的文件类型'));
+    }
+    
+    const targetDir = path.join(UPLOADS_DIR, subDir);
+    if (!fs.existsSync(targetDir)) {
+      fs.mkdirSync(targetDir, { recursive: true });
+    }
+    
+    cb(null, targetDir);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const baseName = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9]/g, '_');
+    const uniqueName = `${Date.now()}_${baseName}${ext}`;
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 100 * 1024 * 1024 // 100MB limit
+  }
+});
 
 const mimeTypes = {
   '.css': 'text/css; charset=utf-8',
@@ -288,103 +325,6 @@ function readRequestBody(req, callback) {
   });
 }
 
-// 文件上传处理
-function handleFileUpload(req, res) {
-  const contentType = req.headers['content-type'];
-  const boundary = contentType?.split('boundary=')[1];
-  
-  if (!boundary) {
-    sendError(res, 400, '缺少请求边界。', 'INVALID_REQUEST');
-    return;
-  }
-
-  let body = Buffer.alloc(0);
-  req.on('data', (chunk) => {
-    body = Buffer.concat([body, chunk]);
-  });
-
-  req.on('end', () => {
-    try {
-      const boundaryBuffer = Buffer.from(`--${boundary}`);
-      const parts = [];
-      let start = 0;
-      
-      while (start < body.length) {
-        const boundaryIndex = body.indexOf(boundaryBuffer, start);
-        if (boundaryIndex === -1) break;
-        
-        if (boundaryIndex > start) {
-          parts.push(body.slice(start, boundaryIndex));
-        }
-        start = boundaryIndex + boundaryBuffer.length;
-      }
-
-      let fileName = '';
-      let fileData = Buffer.alloc(0);
-
-      for (const part of parts) {
-        const partStr = part.toString('utf8');
-        if (partStr.includes('Content-Disposition')) {
-          const filenameMatch = partStr.match(/filename="([^"]+)"/);
-          if (filenameMatch) {
-            fileName = filenameMatch[1];
-          }
-
-          const headerEnd = part.indexOf('\r\n\r\n');
-          if (headerEnd !== -1) {
-            fileData = part.slice(headerEnd + 4);
-            
-            // 移除末尾的 \r\n--\r\n
-            const endMarker = fileData.indexOf('\r\n--');
-            if (endMarker !== -1) {
-              fileData = fileData.slice(0, endMarker);
-            }
-          }
-        }
-      }
-
-      if (!fileName) {
-        sendError(res, 400, '未找到文件名。', 'INVALID_FILE');
-        return;
-      }
-
-      // 确保上传目录存在
-      if (!fs.existsSync(UPLOADS_DIR)) {
-        fs.mkdirSync(UPLOADS_DIR, { recursive: true });
-      }
-
-      // 生成唯一文件名
-      const ext = path.extname(fileName);
-      const baseName = path.basename(fileName, ext);
-      const uniqueName = `${Date.now()}_${baseName.replace(/[^a-zA-Z0-9]/g, '_')}${ext}`;
-      const filePath = path.join(UPLOADS_DIR, uniqueName);
-
-      // 检查文件类型
-      const allowedTypes = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.mp4', '.webm'];
-      const fileExt = ext.toLowerCase();
-      if (!allowedTypes.includes(fileExt)) {
-        sendError(res, 400, '不支持的文件类型。', 'INVALID_FILE_TYPE');
-        return;
-      }
-
-      // 写入文件（使用Buffer）
-      fs.writeFile(filePath, fileData, (err) => {
-        if (err) {
-          console.error('文件写入失败:', err);
-          sendError(res, 500, '文件保存失败。', 'FILE_SAVE_FAILED');
-          return;
-        }
-
-        const fileUrl = `/uploads/${uniqueName}`;
-        sendSuccess(res, 200, { url: fileUrl });
-      });
-    } catch (error) {
-      console.error('文件上传处理失败:', error);
-      sendError(res, 500, '文件上传处理失败。', 'UPLOAD_ERROR');
-    }
-  });
-}
-
 function validateApplicationPayload(payload) {
   const name = String(payload.name || '').trim();
   const email = String(payload.email || '').trim();
@@ -446,6 +386,14 @@ function resolveStaticFile(pathname) {
     if (fs.existsSync(uploadFile)) {
       return uploadFile;
     }
+    
+    // 尝试在uploads根目录查找（兼容旧格式）
+    const fileName = cleanPath.replace('uploads/', '');
+    const rootFile = path.join(UPLOADS_DIR, fileName);
+    if (fs.existsSync(rootFile)) {
+      return rootFile;
+    }
+    
     return null;
   }
 
@@ -457,26 +405,42 @@ function resolveStaticFile(pathname) {
   return path.join(DIST_DIR, 'index.html');
 }
 
-function serveFile(res, filePath) {
+function serveFile(res, filePath, req) {
   const extname = path.extname(filePath).toLowerCase();
   const contentType = mimeTypes[extname] || 'application/octet-stream';
+  
+  const stat = fs.statSync(filePath);
+  const fileSize = stat.size;
+  const range = req.headers.range;
 
-  fs.readFile(filePath, (error, content) => {
-    if (error) {
-      if (error.code === 'ENOENT') {
-        sendText(res, 404, '404 Not Found');
-      } else {
-        sendText(res, 500, `Server Error: ${error.code}`);
-      }
-      return;
-    }
-
-    res.writeHead(200, {
+  if (range) {
+    // 支持Range请求，用于视频等大文件的分片加载
+    const parts = range.replace(/bytes=/, '').split('-');
+    const start = parseInt(parts[0], 10);
+    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+    const chunksize = (end - start) + 1;
+    const file = fs.createReadStream(filePath, { start, end });
+    
+    const head = {
       ...getCorsHeaders(),
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunksize,
       'Content-Type': contentType
-    });
-    res.end(content);
-  });
+    };
+    
+    res.writeHead(206, head);
+    file.pipe(res);
+  } else {
+    // 普通请求，流式返回文件（避免大文件内存问题）
+    const head = {
+      ...getCorsHeaders(),
+      'Content-Length': fileSize,
+      'Content-Type': contentType
+    };
+    res.writeHead(200, head);
+    fs.createReadStream(filePath).pipe(res);
+  }
 }
 
 const server = http.createServer((req, res) => {
@@ -617,7 +581,7 @@ const server = http.createServer((req, res) => {
       }
 
       const project = projects.find(
-        (item) => item.id === projectId && item.visible
+        (item) => String(item.id) === projectId && item.visible
       );
 
       if (!project) {
@@ -893,10 +857,13 @@ const server = http.createServer((req, res) => {
           category: payload.category || 'ue',
           type: payload.type || '',
           description: payload.description || '',
+          introduction: payload.introduction || '',
           coverUrl: payload.coverUrl || '',
-          videoUrl: payload.videoUrl || '',
+          imageUrls: Array.isArray(payload.imageUrls) ? payload.imageUrls : [],
+          videoUrls: Array.isArray(payload.videoUrls) ? payload.videoUrls : [],
           sortOrder: payload.sortOrder || 0,
           visible: payload.visible !== undefined ? payload.visible : true,
+          showOnHome: payload.showOnHome !== undefined ? payload.showOnHome : false,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         };
@@ -933,7 +900,7 @@ const server = http.createServer((req, res) => {
           return;
         }
 
-        const projectIndex = projects.findIndex(p => p.id === projectId);
+        const projectIndex = projects.findIndex(p => String(p.id) === projectId);
         if (projectIndex === -1) {
           sendError(res, 404, '作品不存在。', 'PROJECT_NOT_FOUND');
           return;
@@ -963,7 +930,7 @@ const server = http.createServer((req, res) => {
         return;
       }
 
-      const projectIndex = projects.findIndex(p => p.id === projectId);
+      const projectIndex = projects.findIndex(p => String(p.id) === projectId);
       if (projectIndex === -1) {
         sendError(res, 404, '作品不存在。', 'PROJECT_NOT_FOUND');
         return;
@@ -983,7 +950,46 @@ const server = http.createServer((req, res) => {
 
   // 文件上传接口
   if (req.method === 'POST' && requestUrl.pathname === '/api/upload') {
-    handleFileUpload(req, res);
+    // 使用multer中间件处理文件上传
+    upload.single('file')(req, res, (err) => {
+      if (err) {
+        if (err instanceof multer.MulterError) {
+          if (err.code === 'LIMIT_FILE_SIZE') {
+            sendError(res, 400, '文件大小超过限制（最大100MB）。', 'FILE_TOO_LARGE');
+          } else {
+            sendError(res, 400, `文件上传错误: ${err.message}`, 'UPLOAD_ERROR');
+          }
+        } else {
+          sendError(res, 400, err.message || '不支持的文件类型', 'UPLOAD_ERROR');
+        }
+        return;
+      }
+
+      if (!req.file) {
+        sendError(res, 400, '未找到文件。', 'NO_FILE');
+        return;
+      }
+
+      // 确定文件类型
+      const ext = path.extname(req.file.originalname).toLowerCase();
+      let fileType = '';
+      let subDir = '';
+      
+      if (['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext)) {
+        fileType = 'image';
+        subDir = 'images';
+      } else if (['.mp4', '.webm'].includes(ext)) {
+        fileType = 'video';
+        subDir = 'videos';
+      } else {
+        sendError(res, 400, '不支持的文件类型。', 'INVALID_FILE_TYPE');
+        return;
+      }
+
+      // 返回文件URL
+      const fileUrl = `/uploads/${subDir}/${req.file.filename}`;
+      sendSuccess(res, 200, { url: fileUrl, type: fileType });
+    });
     return;
   }
 
@@ -1002,7 +1008,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  serveFile(res, staticFile);
+  serveFile(res, staticFile, req);
 });
 
 server.listen(PORT, () => {
