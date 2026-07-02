@@ -439,6 +439,78 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (req.method === 'GET' && requestUrl.pathname === '/api/contents') {
+    try {
+      const filePath = path.join(__dirname, 'contents.json');
+      if (fs.existsSync(filePath)) {
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        sendSuccess(res, 200, data);
+      } else {
+        sendSuccess(res, 200, {});
+      }
+    } catch (error) {
+      sendError(res, 500, '内容读取失败。', 'CONTENTS_READ_FAILED');
+    }
+    return;
+  }
+
+  const contentMatch = requestUrl.pathname.match(/^\/api\/contents\/(.+)$/);
+  if (contentMatch && req.method === 'PUT') {
+    readRequestBody(req, (body) => {
+      const payload = parseJson(body);
+      const key = contentMatch[1];
+      
+      try {
+        const filePath = path.join(__dirname, 'contents.json');
+        let data = {};
+        if (fs.existsSync(filePath)) {
+          data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        }
+        data[key] = payload;
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        sendSuccess(res, 200, payload);
+      } catch (error) {
+        sendError(res, 500, '内容更新失败。', 'CONTENTS_UPDATE_FAILED');
+      }
+    });
+    return;
+  }
+
+  if (req.method === 'GET' && requestUrl.pathname === '/api/settings') {
+    try {
+      const filePath = path.join(__dirname, 'settings.json');
+      if (fs.existsSync(filePath)) {
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        sendSuccess(res, 200, data);
+      } else {
+        sendSuccess(res, 200, {});
+      }
+    } catch (error) {
+      sendError(res, 500, '设置读取失败。', 'SETTINGS_READ_FAILED');
+    }
+    return;
+  }
+
+  if (req.method === 'PUT' && requestUrl.pathname === '/api/settings') {
+    readRequestBody(req, (body) => {
+      const payload = parseJson(body);
+      
+      try {
+        const filePath = path.join(__dirname, 'settings.json');
+        let data = {};
+        if (fs.existsSync(filePath)) {
+          data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        }
+        Object.assign(data, payload);
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        sendSuccess(res, 200, data);
+      } catch (error) {
+        sendError(res, 500, '设置更新失败。', 'SETTINGS_UPDATE_FAILED');
+      }
+    });
+    return;
+  }
+
   if (req.method === 'POST' && requestUrl.pathname === '/api/projects') {
     readRequestBody(req, async (body) => {
       const payload = parseJson(body);
